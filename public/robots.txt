@@ -1,0 +1,15 @@
+# robots.txt for HPCH Tech
+# https://hpchtech.com
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://hpchtech.com/sitemap.xml
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
+
+# Disallow admin or private paths (add as needed)
+# Disallow: /admin/
+# Disallow: /private/
