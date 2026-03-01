@@ -14,7 +14,7 @@ const config = {
   isProduction: process.env.NODE_ENV === 'production',
 
   // OTP
-  otpSecret: process.env.OTP_SECRET || 'hpch-otp-secret-key-2024-secure',
+  otpSecret: process.env.OTP_SECRET,
   otpExpiryMinutes: parseInt(process.env.OTP_EXPIRY_MINUTES, 10) || 5,
 
   // Gmail SMTP
@@ -34,6 +34,7 @@ const config = {
 
 // Validate required env vars
 const required = [
+  ['OTP_SECRET', config.otpSecret],
   ['GMAIL_USER', config.gmail.user],
   ['GMAIL_APP_PASSWORD', config.gmail.password],
   ['TWILIO_ACCOUNT_SID', config.twilio.accountSid],

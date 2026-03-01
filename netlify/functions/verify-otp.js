@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 
-const OTP_SECRET = process.env.OTP_SECRET || 'hpch-otp-secret-key-2024-secure'
+const OTP_SECRET = process.env.OTP_SECRET
 
 function createOtpHash(email, otp, expiresAt) {
   return crypto.createHmac('sha256', OTP_SECRET).update(`email|${email}|${otp}|${expiresAt}`).digest('hex')

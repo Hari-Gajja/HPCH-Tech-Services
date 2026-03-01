@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer'
 import crypto from 'crypto'
 
-const OTP_SECRET = process.env.OTP_SECRET || 'hpch-otp-secret-key-2024-secure'
+const OTP_SECRET = process.env.OTP_SECRET
 const OTP_EXPIRY = parseInt(process.env.OTP_EXPIRY_MINUTES || '5', 10)
 
 const transporter = nodemailer.createTransport({
