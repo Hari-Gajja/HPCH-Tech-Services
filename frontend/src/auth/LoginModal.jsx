@@ -9,13 +9,18 @@ export default function LoginModal({ onClose, onSuccess }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const overlayRef = useRef(null);
-  const googleReady = useRef(false);
+  const codeClientRef = useRef(null);
 
-  const handleCredentialResponse = useCallback(
+  const handleCodeResponse = useCallback(
     async (response) => {
+      if (response.error) {
+        setError('Sign-in was cancelled.');
+        setLoading(false);
+        return;
+      }
       try {
         setLoading(true);
-        await login(response.credential);
+        await login(response.code);
         onSuccess?.();
       } catch (err) {
         console.error('Login failed:', err);
@@ -28,16 +33,16 @@ export default function LoginModal({ onClose, onSuccess }) {
 
   useEffect(() => {
     const initGoogle = () => {
-      if (googleReady.current) return;
-      window.google.accounts.id.initialize({
+      if (codeClientRef.current) return;
+      codeClientRef.current = window.google.accounts.oauth2.initCodeClient({
         client_id: GOOGLE_CLIENT_ID,
-        callback: handleCredentialResponse,
-        use_fedcm_for_prompt: false,
+        scope: 'email profile',
+        ux_mode: 'popup',
+        callback: handleCodeResponse,
       });
-      googleReady.current = true;
     };
 
-    if (window.google?.accounts?.id) {
+    if (window.google?.accounts?.oauth2) {
       initGoogle();
       return;
     }
@@ -48,7 +53,7 @@ export default function LoginModal({ onClose, onSuccess }) {
     script.defer = true;
     script.onload = initGoogle;
     document.head.appendChild(script);
-  }, [handleCredentialResponse]);
+  }, [handleCodeResponse]);
 
   // Lock body scroll while modal is open
   useEffect(() => {
@@ -69,30 +74,8 @@ export default function LoginModal({ onClose, onSuccess }) {
 
   const handleSignIn = () => {
     setError('');
-    if (window.google?.accounts?.id) {
-      window.google.accounts.id.prompt((notification) => {
-        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-          // Fallback: render the sign-in button in a hidden container and click it
-          const btnDiv = document.createElement('div');
-          btnDiv.style.position = 'fixed';
-          btnDiv.style.opacity = '0';
-          btnDiv.style.pointerEvents = 'none';
-          document.body.appendChild(btnDiv);
-          window.google.accounts.id.renderButton(btnDiv, {
-            type: 'standard',
-            theme: 'filled_black',
-            size: 'large',
-            text: 'signin_with',
-            ux_mode: 'popup',
-          });
-          // Click the rendered button to trigger popup
-          setTimeout(() => {
-            const btn = btnDiv.querySelector('[role="button"]') || btnDiv.querySelector('div[tabindex]') || btnDiv.firstElementChild;
-            if (btn) btn.click();
-            setTimeout(() => btnDiv.remove(), 1000);
-          }, 100);
-        }
-      });
+    if (codeClientRef.current) {
+      codeClientRef.current.requestCode();
     }
   };
 

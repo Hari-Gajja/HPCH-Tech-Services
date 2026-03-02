@@ -14,8 +14,8 @@ export function AuthProvider({ children }) {
       .finally(() => setLoading(false));
   }, []);
 
-  const login = useCallback(async (credential) => {
-    const data = await loginWithGoogle(credential);
+  const login = useCallback(async (code) => {
+    const data = await loginWithGoogle(code);
     setUser(data.user);
     return data.user;
   }, []);

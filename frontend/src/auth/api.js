@@ -1,12 +1,12 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL;
 
-// Send Google ID token (credential) to backend
-export async function loginWithGoogle(credential) {
+// Send Google authorization code to backend
+export async function loginWithGoogle(code) {
   const res = await fetch(`${API_URL}/api/auth/google`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
-    body: JSON.stringify({ credential }),
+    body: JSON.stringify({ code }),
   });
 
   if (!res.ok) {
