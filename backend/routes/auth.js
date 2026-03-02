@@ -8,29 +8,20 @@ dotenv.config();
 
 const router = express.Router();
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const oAuth2Client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
-const oAuth2Client = new OAuth2Client(
-  GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET,
-  'postmessage'
-);
-
-// Exchange authorization code for tokens, save user
+// Verify Google ID token (credential) and save user
 router.post('/google', async (req, res) => {
-  const { code } = req.body;
+  const { credential } = req.body;
 
-  if (!code) {
-    return res.status(400).json({ error: 'Missing authorization code' });
+  if (!credential) {
+    return res.status(400).json({ error: 'Missing Google credential' });
   }
 
   try {
-    // Exchange authorization code for tokens
-    const { tokens } = await oAuth2Client.getToken(code);
-
-    // Verify the ID token
+    // Verify the ID token directly — no code exchange needed
     const ticket = await oAuth2Client.verifyIdToken({
-      idToken: tokens.id_token,
+      idToken: credential,
       audience: GOOGLE_CLIENT_ID,
     });
 

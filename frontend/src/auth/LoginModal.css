@@ -266,6 +266,20 @@
 }
 
 /* ---------- google button ---------- */
+.lm-google-wrap {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lm-google-rendered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+}
+
 .lm-google-btn {
   display: flex;
   align-items: center;
