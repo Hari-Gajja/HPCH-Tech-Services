@@ -1,6 +1,6 @@
-// In production, API calls go through Netlify proxy (same-origin, no CORS/cookie issues).
+// In production builds, always use relative URLs (Netlify proxy handles routing to backend).
 // In dev, use the local backend URL.
-const API_URL = import.meta.env.VITE_API_URL || '';
+const API_URL = import.meta.env.DEV ? (import.meta.env.VITE_API_URL || 'http://localhost:5000') : '';
 
 // Send Google ID token (credential) to backend
 export async function loginWithGoogle(credential) {
