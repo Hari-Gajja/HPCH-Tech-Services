@@ -10,6 +10,18 @@ const router = express.Router();
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const oAuth2Client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
+// Detect production: Render sets NODE_ENV, or check if FRONTEND_URL is HTTPS
+const isProduction =
+  process.env.NODE_ENV === 'production' ||
+  (process.env.FRONTEND_URL && process.env.FRONTEND_URL.startsWith('https'));
+
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: isProduction ? 'none' : 'lax',
+  maxAge: 24 * 60 * 60 * 1000, // 24 hours
+};
+
 // Verify Google ID token (credential) and save user
 router.post('/google', async (req, res) => {
   const { credential } = req.body;
@@ -57,12 +69,7 @@ router.post('/google', async (req, res) => {
     const token = jwt.sign(userPayload, process.env.JWT_SECRET, { expiresIn: '24h' });
 
     // Set token as httpOnly cookie
-    res.cookie('auth_token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    });
+    res.cookie('auth_token', token, COOKIE_OPTIONS);
 
     return res.json({ success: true, user: userPayload });
   } catch (error) {
