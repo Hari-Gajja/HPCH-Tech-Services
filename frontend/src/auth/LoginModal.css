@@ -1,0 +1,385 @@
+/* =============================================
+   LOGIN MODAL - Modern Glassmorphism + Animations
+   ============================================= */
+
+/* ---------- overlay ---------- */
+.lm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: lmOverlayIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  cursor: auto;
+}
+
+.lm-overlay *,
+.lm-overlay *::before,
+.lm-overlay *::after {
+  cursor: auto;
+}
+
+@keyframes lmOverlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ---------- floating particles ---------- */
+.lm-particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.35;
+  filter: blur(1px);
+  animation: lmFloat linear infinite;
+}
+
+.lm-particle--1 {
+  width: 6px; height: 6px;
+  background: #ff0080;
+  top: 18%; left: 12%;
+  animation-duration: 7s;
+}
+.lm-particle--2 {
+  width: 4px; height: 4px;
+  background: #00d4ff;
+  top: 72%; left: 80%;
+  animation-duration: 9s;
+  animation-delay: -2s;
+}
+.lm-particle--3 {
+  width: 5px; height: 5px;
+  background: #7928ca;
+  top: 30%; right: 15%;
+  animation-duration: 8s;
+  animation-delay: -4s;
+}
+.lm-particle--4 {
+  width: 3px; height: 3px;
+  background: #00ff88;
+  bottom: 25%; left: 25%;
+  animation-duration: 11s;
+  animation-delay: -1s;
+}
+.lm-particle--5 {
+  width: 5px; height: 5px;
+  background: #ffee00;
+  top: 55%; right: 30%;
+  animation-duration: 10s;
+  animation-delay: -6s;
+}
+
+@keyframes lmFloat {
+  0%   { transform: translateY(0) translateX(0) scale(1);   opacity: 0.35; }
+  25%  { transform: translateY(-30px) translateX(15px) scale(1.4); opacity: 0.6; }
+  50%  { transform: translateY(-10px) translateX(-20px) scale(0.9); opacity: 0.25; }
+  75%  { transform: translateY(-40px) translateX(10px) scale(1.2);  opacity: 0.5; }
+  100% { transform: translateY(0) translateX(0) scale(1);   opacity: 0.35; }
+}
+
+/* ---------- card ---------- */
+.lm-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 2.8rem 2.2rem 2rem;
+  border-radius: 1.5rem;
+  background: rgba(20, 20, 20, 0.8);
+  backdrop-filter: blur(40px) saturate(1.6);
+  -webkit-backdrop-filter: blur(40px) saturate(1.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 30px 100px -20px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  max-width: 400px;
+  width: 92%;
+  overflow: hidden;
+  animation: lmCardIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes lmCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.92) rotateX(4deg);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0);
+    filter: blur(0);
+  }
+}
+
+/* ---------- animated gradient border ---------- */
+.lm-card-border {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    transparent 30%,
+    #ff0080 45%,
+    #7928ca 55%,
+    #00d4ff 65%,
+    transparent 80%
+  );
+  -webkit-mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
+  mask: linear-gradient(#000, #000) content-box, linear-gradient(#000, #000);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: lmBorderSpin 4s linear infinite;
+}
+
+@keyframes lmBorderSpin {
+  to { --border-angle: 360deg; }
+}
+
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* ---------- staggered item animation ---------- */
+.anim-item {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: lmItemIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(0.15s + var(--i, 0) * 0.08s);
+}
+
+@keyframes lmItemIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- close button ---------- */
+.lm-close {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.25s;
+  z-index: 2;
+}
+
+.lm-close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: rotate(90deg);
+}
+
+/* ---------- lock icon ---------- */
+.lm-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: rgba(255, 0, 128, 0.08);
+  border: 1px solid rgba(255, 0, 128, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.2rem;
+}
+
+/* ---------- logo ---------- */
+.lm-logo {
+  font-family: "Syne", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  background: linear-gradient(135deg, #ff0080, #7928ca, #00d4ff);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: lmGradientShift 3s ease-in-out infinite alternate;
+}
+
+@keyframes lmGradientShift {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* ---------- text ---------- */
+.lm-title {
+  color: #fff;
+  font-family: "Syne", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+}
+
+.lm-subtitle {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.82rem;
+  margin: 0;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* ---------- divider ---------- */
+.lm-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  margin: 0.25rem 0;
+}
+
+.lm-divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+}
+
+.lm-divider-text {
+  font-family: "Space Mono", monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.25);
+  white-space: nowrap;
+}
+
+/* ---------- google button ---------- */
+.lm-google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  min-height: 52px;
+  background: #fff;
+  color: #1f1f1f;
+  font-family: "Syne", sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s ease;
+}
+
+.lm-google-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(255, 0, 128, 0.06),
+    rgba(0, 212, 255, 0.06));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.lm-google-btn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.2),
+    0 0 20px rgba(255, 0, 128, 0.08),
+    0 0 20px rgba(0, 212, 255, 0.08);
+}
+
+.lm-google-btn:hover::before {
+  opacity: 1;
+}
+
+.lm-google-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.lm-google-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.lm-google-btn--loading {
+  pointer-events: none;
+}
+
+/* ---------- spinner ---------- */
+.lm-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #7928ca;
+  border-radius: 50%;
+  animation: lmSpin 0.7s linear infinite;
+}
+
+@keyframes lmSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- error ---------- */
+.lm-error {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #ff4d6a;
+  font-size: 0.8rem;
+  margin: 0;
+  text-align: center;
+  padding: 0.5rem 0.8rem;
+  background: rgba(255, 77, 106, 0.08);
+  border: 1px solid rgba(255, 77, 106, 0.15);
+  border-radius: 10px;
+  width: 100%;
+  justify-content: center;
+}
+
+/* ---------- footer ---------- */
+.lm-footer {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 0.68rem;
+  text-align: center;
+  margin: 0.25rem 0 0;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  justify-content: center;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 480px) {
+  .lm-card {
+    padding: 2.2rem 1.4rem 1.6rem;
+    border-radius: 1.25rem;
+  }
+
+  .lm-title {
+    font-size: 1.15rem;
+  }
+
+  .lm-google-btn {
+    border-radius: 12px;
+    min-height: 48px;
+  }
+}
