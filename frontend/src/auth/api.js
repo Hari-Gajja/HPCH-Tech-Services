@@ -1,4 +1,6 @@
-const API_URL = import.meta.env.VITE_API_URL;
+// In production, API calls go through Netlify proxy (same-origin, no CORS/cookie issues).
+// In dev, use the local backend URL.
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 // Send Google ID token (credential) to backend
 export async function loginWithGoogle(credential) {
