@@ -33,6 +33,7 @@ function App() {
   // Scroll Effects
   useEffect(() => {
     let ticking = false
+    let cachedSections = null
     const handleScroll = () => {
       if (ticking) return
       ticking = true
@@ -41,19 +42,18 @@ function App() {
         setHeaderScrolled(sy > 100)
         setBackToTopVisible(sy > 500)
 
-        // Active section detection
-        const sections = document.querySelectorAll('section[id]')
+        // Active section detection (cache DOM query)
+        if (!cachedSections) cachedSections = document.querySelectorAll('section[id]')
         const scrollY = sy + 150
         
-        sections.forEach(section => {
+        for (let i = 0; i < cachedSections.length; i++) {
+          const section = cachedSections[i]
           const sectionTop = section.offsetTop
-          const sectionHeight = section.offsetHeight
-          const sectionId = section.getAttribute('id')
-          
-          if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
-            setActiveSection(sectionId)
+          if (scrollY >= sectionTop && scrollY < sectionTop + section.offsetHeight) {
+            setActiveSection(section.id)
+            break
           }
-        })
+        }
         ticking = false
       })
     }
@@ -205,6 +205,25 @@ function App() {
     setFormStatus({ loading: true, success: false, error: false, blocked: false, invalid: false })
 
     try {
+      // Append selected services into the message field before sending
+      const messageField = formRef.current.message
+      const originalMessage = messageField.value
+      if (selectedServices.length > 0) {
+        const serviceLines = selectedServices.map(id => {
+          const svc = SERVICES.find(s => s.id === id)
+          if (!svc) return ''
+          const discounted = getDiscountedPrice(svc.price)
+          return discounted < svc.price
+            ? `• ${svc.name} — ₹${discounted.toLocaleString()} (was ₹${svc.price.toLocaleString()})`
+            : `• ${svc.name} — ₹${svc.price.toLocaleString()}`
+        }).filter(Boolean).join('\n')
+        const total = selectedServices.reduce((sum, id) => {
+          const svc = SERVICES.find(s => s.id === id)
+          return sum + (svc ? getDiscountedPrice(svc.price) : 0)
+        }, 0)
+        messageField.value = `${originalMessage}\n\n--- Selected Services ---\n${serviceLines}\n\nEstimated Total: ₹${total.toLocaleString()}/-${getTotalDiscount() > 0 ? ` (${getTotalDiscount()}% discount applied)` : ''}`
+      }
+
       // Send email via emailjs
       await emailjs.sendForm(
         'service_3zwkhxs',
@@ -376,9 +395,9 @@ function App() {
                   </a>
                 </div>
               </div>
-              <div className="hero-visual reveal-right delay-200">
+              <div className="hero-visual">
                 <div className="hero-logo">
-                  <img src={logoImg} alt="HPCH Tech Logo" fetchPriority="high" />
+                  <img src={logoImg} alt="HPCH Tech Logo" fetchPriority="high" width="450" height="450" />
                 </div>
               </div>
             </div>
@@ -688,7 +707,7 @@ function App() {
                   <span className="bg-text-accent">dev</span>
                 </div>
                 <div className="team-image">
-                  <img src={member1Img} alt="Hari - Founder" loading="lazy" decoding="async" />
+                  <img src={member1Img} alt="Hari - Founder" loading="lazy" decoding="async" width="600" height="900" />
                 </div>
                 <div className="team-info">
                   <h3>Hari</h3>
@@ -708,7 +727,7 @@ function App() {
                   <span className="bg-text-accent">dev</span>
                 </div>
                 <div className="team-image">
-                  <img src={member3Img} alt="Prasad - Backend Developer" loading="lazy" decoding="async" />
+                  <img src={member3Img} alt="Prasad - Backend Developer" loading="lazy" decoding="async" width="600" height="800" />
                 </div>
                 <div className="team-info">
                   <h3>Prasad</h3>
@@ -728,7 +747,7 @@ function App() {
                   <span className="bg-text-accent">dev</span>
                 </div>
                 <div className="team-image">
-                  <img src={member2Img} alt="Chaitanya - Frontend Designer" loading="lazy" decoding="async" />
+                  <img src={member2Img} alt="Chaitanya - Frontend Designer" loading="lazy" decoding="async" width="600" height="800" />
                 </div>
                 <div className="team-info">
                   <h3>Chaitanya</h3>
@@ -748,7 +767,7 @@ function App() {
                   <span className="bg-text-accent">dev</span>
                 </div>
                 <div className="team-image">
-                  <img src={member4Img} alt="Harish - Full Stack Developer" loading="lazy" decoding="async" />
+                  <img src={member4Img} alt="Harish - Full Stack Developer" loading="lazy" decoding="async" width="600" height="581" />
                 </div>
                 <div className="team-info">
                   <h3>Harish</h3>
@@ -1208,8 +1227,15 @@ function App() {
                     </div>
                   )}
                 </div>
-                <input type="hidden" name="selected_services" value={selectedServices.map(id => SERVICES.find(s => s.id === id)?.name).filter(Boolean).join(', ')} />
-                <input type="hidden" name="quote_total" value={selectedServices.reduce((sum, id) => { const svc = SERVICES.find(s => s.id === id); return sum + (svc ? getDiscountedPrice(svc.price) : 0) }, 0)} />
+                <input type="hidden" name="selected_services" value={selectedServices.map(id => {
+                  const svc = SERVICES.find(s => s.id === id)
+                  if (!svc) return ''
+                  const discounted = getDiscountedPrice(svc.price)
+                  return discounted < svc.price
+                    ? `${svc.name} — ₹${discounted.toLocaleString()} (was ₹${svc.price.toLocaleString()})`
+                    : `${svc.name} — ₹${svc.price.toLocaleString()}`
+                }).filter(Boolean).join(' | ')} />
+                <input type="hidden" name="quote_total" value={`₹${selectedServices.reduce((sum, id) => { const svc = SERVICES.find(s => s.id === id); return sum + (svc ? getDiscountedPrice(svc.price) : 0) }, 0).toLocaleString()}`} />
                 <div className="field">
                   <label htmlFor="message"><i className="fas fa-comment-dots"></i> Project Details</label>
                   <textarea id="message" name="message" placeholder="Tell us about your project..." required></textarea>
