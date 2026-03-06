@@ -2,7 +2,7 @@
    HPCH TECH - Premium Portfolio Design
    ============================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+/* Fonts loaded via <link> in index.html — no @import (render-blocking) */
 
 /* =============================================
    DESIGN TOKENS
@@ -378,6 +378,8 @@ a {
   inset: 0;
   z-index: -2;
   overflow: hidden;
+  contain: strict;
+  pointer-events: none;
 }
 
 .particle {
@@ -385,6 +387,8 @@ a {
   border-radius: 50%;
   filter: blur(var(--blur-xl));
   opacity: 0.4;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .particle:nth-child(1) {
@@ -437,6 +441,7 @@ a {
     linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
   background-size: 100px 100px;
   pointer-events: none;
+  contain: strict;
 }
 
 /* Noise Texture - Removed to prevent scroll glitching */
@@ -831,6 +836,8 @@ p {
   position: relative;
   display: flex;
   align-items: center;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
 }
 
 .content {
@@ -959,6 +966,8 @@ p {
   position: relative;
   overflow: hidden;
   padding-top: 100px;
+  content-visibility: visible;
+  contain-intrinsic-size: auto none;
 }
 
 .hero-panel {
@@ -4144,6 +4153,8 @@ p {
   animation: marquee 20s linear infinite;
   white-space: nowrap;
   will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .marquee-reverse {
@@ -4303,12 +4314,61 @@ p {
   }
 }
 
+/* ========== TABLET NAV (769px – 1024px) ========== */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .main-nav ul {
+    gap: 0.15rem;
+  }
+
+  .nav-link {
+    padding: 0.4rem 0.55rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.06em;
+  }
+
+  .nav-link.cta {
+    padding: 0.4rem 0.8rem;
+  }
+
+  .header-user {
+    margin-left: 0.5rem;
+  }
+
+  .header-login-btn {
+    margin-left: 0.5rem;
+    font-size: 0.65rem;
+    padding: 0.35rem 0.7rem;
+  }
+
+  .logout-btn {
+    font-size: 0.65rem;
+    padding: 0.3rem 0.6rem;
+  }
+}
+
 @media (max-width: 768px) {
   .section {
     padding: 70px 5% 50px;
   }
   
   .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
     background: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -4349,8 +4409,8 @@ p {
     text-align: center;
     padding: 0.85rem 1rem;
     font-size: 0.85rem;
-    color: #ffffff;
-    background: rgba(0, 0, 0, 0.479);
+    color: var(--black);
+    background: rgba(0, 0, 0, 0.03);
     border-radius: 10px;
     font-weight: 600;
     transition: all 0.3s ease;
@@ -4358,6 +4418,7 @@ p {
 
   .nav-link:hover {
     background: rgba(0, 0, 0, 0.08);
+    color: var(--black);
   }
   
   .nav-link.active::after {
@@ -4365,18 +4426,19 @@ p {
   }
 
   .nav-link.active {
-    background: #000000;
+    background: var(--black);
     color: #ffffff;
   }
   
   .nav-link.cta {
     margin-top: 0.5rem;
-    background: #000000;
+    background: var(--neon-pink);
     color: #ffffff;
+    border-color: var(--neon-pink);
   }
 
   .nav-link.cta:hover {
-    background: #222222;
+    background: #e00070;
   }
   
   .mobile-menu-btn {
@@ -4540,11 +4602,37 @@ p {
 
 @media (max-width: 768px) {
   .header-user {
-    margin-left: 0;
-    margin-right: 3.5rem;
+    margin-left: auto;
+    margin-right: 3rem;
   }
+
+  .header-avatar {
+    border-color: rgba(0, 0, 0, 0.15);
+  }
+
+  .logout-btn {
+    color: var(--black);
+    background: rgba(255, 0, 128, 0.08);
+    border-color: rgba(255, 0, 128, 0.25);
+    font-size: 0.68rem;
+    padding: 0.3rem 0.65rem;
+  }
+
+  .logout-btn:hover {
+    background: rgba(255, 0, 128, 0.18);
+  }
+
   .header-login-btn {
-    margin-left: 0;
-    margin-right: 3.5rem;
+    margin-left: auto;
+    margin-right: 3rem;
+    color: var(--black);
+    background: rgba(0, 212, 255, 0.08);
+    border-color: rgba(0, 212, 255, 0.25);
+    font-size: 0.68rem;
+    padding: 0.35rem 0.75rem;
+  }
+
+  .header-login-btn:hover {
+    background: rgba(0, 212, 255, 0.18);
   }
 }

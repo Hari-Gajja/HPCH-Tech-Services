@@ -32,26 +32,33 @@ function App() {
 
   // Scroll Effects
   useEffect(() => {
+    let ticking = false
     const handleScroll = () => {
-      setHeaderScrolled(window.scrollY > 100)
-      setBackToTopVisible(window.scrollY > 500)
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        const sy = window.scrollY
+        setHeaderScrolled(sy > 100)
+        setBackToTopVisible(sy > 500)
 
-      // Active section detection
-      const sections = document.querySelectorAll('section[id]')
-      const scrollY = window.scrollY + 150
-      
-      sections.forEach(section => {
-        const sectionTop = section.offsetTop
-        const sectionHeight = section.offsetHeight
-        const sectionId = section.getAttribute('id')
+        // Active section detection
+        const sections = document.querySelectorAll('section[id]')
+        const scrollY = sy + 150
         
-        if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
-          setActiveSection(sectionId)
-        }
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop
+          const sectionHeight = section.offsetHeight
+          const sectionId = section.getAttribute('id')
+          
+          if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+            setActiveSection(sectionId)
+          }
+        })
+        ticking = false
       })
     }
 
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
@@ -307,7 +314,7 @@ function App() {
             <li><a href="#services" className={`nav-link ${activeSection === 'services' ? 'active' : ''}`} onClick={(e) => scrollToSection(e, 'services')}><span>Services</span></a></li>
             <li><a href="#team" className={`nav-link ${activeSection === 'team' ? 'active' : ''}`} onClick={(e) => scrollToSection(e, 'team')}><span>Team</span></a></li>
             <li><a href="#projects" className={`nav-link ${activeSection === 'projects' ? 'active' : ''}`} onClick={(e) => scrollToSection(e, 'projects')}><span>Work</span></a></li>
-            <li><a href="#student-discount" className={`nav-link ${activeSection === 'student-discount' ? 'active' : ''}`} onClick={(e) => scrollToSection(e, 'student-discount')}><span>Student Discount</span></a></li>
+            <li><a href="#student-discount" className={`nav-link ${activeSection === 'student-discount' ? 'active' : ''}`} onClick={(e) => scrollToSection(e, 'student-discount')}><span>Students</span></a></li>
             <li><a href="#contact" className="nav-link cta" onClick={(e) => scrollToSection(e, 'contact')}><span>Hire Us</span></a></li>
           </ul>
         </nav>
@@ -371,7 +378,7 @@ function App() {
               </div>
               <div className="hero-visual reveal-right delay-200">
                 <div className="hero-logo">
-                  <img src={logoImg} alt="HPCH Tech Logo" />
+                  <img src={logoImg} alt="HPCH Tech Logo" fetchPriority="high" />
                 </div>
               </div>
             </div>
@@ -681,7 +688,7 @@ function App() {
                   <span className="bg-text-accent">dev</span>
                 </div>
                 <div className="team-image">
-                  <img src={member1Img} alt="Hari - Founder" />
+                  <img src={member1Img} alt="Hari - Founder" loading="lazy" decoding="async" />
                 </div>
                 <div className="team-info">
                   <h3>Hari</h3>
@@ -701,7 +708,7 @@ function App() {
                   <span className="bg-text-accent">dev</span>
                 </div>
                 <div className="team-image">
-                  <img src={member3Img} alt="Prasad - Backend Developer" />
+                  <img src={member3Img} alt="Prasad - Backend Developer" loading="lazy" decoding="async" />
                 </div>
                 <div className="team-info">
                   <h3>Prasad</h3>
@@ -721,7 +728,7 @@ function App() {
                   <span className="bg-text-accent">dev</span>
                 </div>
                 <div className="team-image">
-                  <img src={member2Img} alt="Chaitanya - Frontend Designer" />
+                  <img src={member2Img} alt="Chaitanya - Frontend Designer" loading="lazy" decoding="async" />
                 </div>
                 <div className="team-info">
                   <h3>Chaitanya</h3>
@@ -741,7 +748,7 @@ function App() {
                   <span className="bg-text-accent">dev</span>
                 </div>
                 <div className="team-image">
-                  <img src={member4Img} alt="Harish - Full Stack Developer" />
+                  <img src={member4Img} alt="Harish - Full Stack Developer" loading="lazy" decoding="async" />
                 </div>
                 <div className="team-info">
                   <h3>Harish</h3>
@@ -1000,7 +1007,7 @@ function App() {
                   <div className="student-id-upload">
                     <label htmlFor="student_id_file" className="upload-label">
                       {studentIdPreview ? (
-                        <img src={studentIdPreview} alt="Student ID preview" className="student-id-preview" />
+                        <img src={studentIdPreview} alt="Student ID preview" className="student-id-preview" loading="lazy" decoding="async" />
                       ) : (
                         <span className="upload-placeholder">
                           <i className="fas fa-cloud-upload-alt"></i>
@@ -1016,6 +1023,11 @@ function App() {
                       onChange={(e) => {
                         const file = e.target.files[0]
                         if (file) {
+                          if (file.size > 800 * 1024) {
+                            alert('File size must be under 800KB. Please upload a smaller image.')
+                            e.target.value = ''
+                            return
+                          }
                           setStudentIdFile(file)
                           setStudentIdPreview(URL.createObjectURL(file))
                         }

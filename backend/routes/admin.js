@@ -19,7 +19,7 @@ cloudinary.config({
 // Multer – memory storage for Cloudinary upload
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
+  limits: { fileSize: 800 * 1024 }, // 800 KB
   fileFilter: (_req, file, cb) => {
     if (file.mimetype.startsWith('image/')) cb(null, true);
     else cb(new Error('Only image files are allowed'));
