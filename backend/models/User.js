@@ -37,6 +37,12 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    studentDiscount: {
+      type: Number,
+      default: 0,
+      min: 0,
+      max: 100,
+    },
   },
   {
     timestamps: true, // adds createdAt & updatedAt automatically

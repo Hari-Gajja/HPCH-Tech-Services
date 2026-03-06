@@ -63,6 +63,7 @@ router.post('/google', async (req, res) => {
       phone: dbUser.phone,
       picture: dbUser.picture,
       emailVerified: dbUser.emailVerified,
+      studentDiscount: dbUser.studentDiscount || 0,
     };
 
     // Create a session JWT (valid for 24 hours)
@@ -101,6 +102,7 @@ router.get('/me', async (req, res) => {
       phone: dbUser.phone,
       picture: dbUser.picture,
       emailVerified: dbUser.emailVerified,
+      studentDiscount: dbUser.studentDiscount || 0,
     };
     return res.json({ authenticated: true, user });
   } catch {

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import emailjs from '@emailjs/browser'
 import { useAuth } from './auth/AuthContext'
 import LoginModal from './auth/LoginModal'
-import { trackPageView } from './auth/api'
+import { trackPageView, uploadStudentId, submitStudentRequest, fetchDiscount } from './auth/api'
 import './App.css'
 
 // Import images for production build
@@ -19,94 +19,16 @@ function App() {
   const [headerScrolled, setHeaderScrolled] = useState(false)
   const [backToTopVisible, setBackToTopVisible] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState(false)
-  const cursorRef = useRef(null)
-  const cursorFollowerRef = useRef(null)
 
-  // Budget Calculator State
-  const [budgetOptions, setBudgetOptions] = useState({
-    websiteType: 'frontend', // 'frontend' or 'fullstack'
-    customDomain: false,
-    aiChat: false,
-    seoOptimization: false,
-    analyticsIntegration: false,
-    paymentGateway: false,
-    adminDashboard: false,
-    extraPages: 0, // number of extra pages beyond 5
-    maintenancePackage: 'basic' // 'basic', 'premium', 'enterprise'
-  })
 
-  // Calculate total budget
-  const calculateBudget = () => {
-    let total = 0
-    
-    // Base price based on website type
-    if (budgetOptions.websiteType === 'frontend') {
-      total += 3999
-    } else {
-      total += 7999
-    }
-    
-    // Add-ons
-    if (budgetOptions.customDomain) total += 1000
-    if (budgetOptions.aiChat) total += 3000
-    if (budgetOptions.seoOptimization) total += 1500
-    if (budgetOptions.analyticsIntegration) total += 800
-    if (budgetOptions.paymentGateway) total += 2000
-    if (budgetOptions.adminDashboard) total += 2500
-    
-    // Extra pages (₹500 per page)
-    total += budgetOptions.extraPages * 500
-    
-    // Maintenance package
-    if (budgetOptions.maintenancePackage === 'basic') total += 999
-    if (budgetOptions.maintenancePackage === 'premium') total += 1999
-    if (budgetOptions.maintenancePackage === 'enterprise') total += 3999
-    
-    return total
-  }
 
-  const handleBudgetChange = (option, value) => {
-    setBudgetOptions(prev => ({ ...prev, [option]: value }))
-  }
 
   // Track page view on mount
   useEffect(() => { trackPageView() }, [])
 
-  // Custom Cursor Effect
-  useEffect(() => {
-    const cursor = cursorRef.current
-    const cursorFollower = cursorFollowerRef.current
-    
-    if (!cursor || !cursorFollower) return
 
-    let mouseX = 0, mouseY = 0
-    let cursorX = 0, cursorY = 0
-    let followerX = 0, followerY = 0
-    
-    const handleMouseMove = (e) => {
-      mouseX = e.clientX
-      mouseY = e.clientY
-    }
 
-    const animateCursor = () => {
-      cursorX += (mouseX - cursorX) * 0.15
-      cursorY += (mouseY - cursorY) * 0.15
-      followerX += (mouseX - followerX) * 0.08
-      followerY += (mouseY - followerY) * 0.08
-      
-      cursor.style.left = cursorX + 'px'
-      cursor.style.top = cursorY + 'px'
-      cursorFollower.style.left = followerX + 'px'
-      cursorFollower.style.top = followerY + 'px'
-      
-      requestAnimationFrame(animateCursor)
-    }
 
-    document.addEventListener('mousemove', handleMouseMove)
-    animateCursor()
-
-    return () => document.removeEventListener('mousemove', handleMouseMove)
-  }, [])
 
   // Scroll Effects
   useEffect(() => {
@@ -180,10 +102,56 @@ function App() {
 
   const formRef = useRef(null)
   const [formStatus, setFormStatus] = useState({ loading: false, success: false, error: false, blocked: false, invalid: false })
+  const [selectedServices, setSelectedServices] = useState([])
+  const [generalDiscount, setGeneralDiscount] = useState(null)
+
+  // Student discount request form state
+  const [studentFormStatus, setStudentFormStatus] = useState({ loading: false, success: false, error: false })
+  const [collegeName, setCollegeName] = useState('')
+  const [studentIdFile, setStudentIdFile] = useState(null)
+  const [studentIdPreview, setStudentIdPreview] = useState('')
+
+  const SERVICES = [
+    { id: 'frontend', name: 'Frontend Development', price: 4999 },
+    { id: 'frontend-domain', name: 'Frontend + Custom Domain', price: 5999 },
+    { id: 'fullstack', name: 'Full Stack Web Development', price: 8999 },
+    { id: 'fullstack-domain', name: 'Full Stack + Custom Domain', price: 9999 },
+    { id: 'fullstack-ai', name: 'Full Stack + AI Chat', price: 11999 },
+    { id: 'fullstack-ai-domain', name: 'Full Stack + AI Chat + Domain', price: 12999 },
+  ]
+
+  const getDiscountedPrice = (price) => {
+    let discounted = price
+    if (generalDiscount?.active && generalDiscount.percentage > 0) {
+      discounted = discounted - (discounted * generalDiscount.percentage) / 100
+    }
+    if (user?.studentDiscount > 0) {
+      discounted = discounted - (price * user.studentDiscount) / 100
+    }
+    return Math.round(discounted)
+  }
+
+  const getTotalDiscount = () => {
+    let total = 0
+    if (generalDiscount?.active && generalDiscount.percentage > 0) total += generalDiscount.percentage
+    if (user?.studentDiscount > 0) total += user.studentDiscount
+    return Math.min(total, 100)
+  }
+
+  useEffect(() => {
+    fetchDiscount().then(d => setGeneralDiscount(d)).catch(() => {})
+  }, [])
+
+  // Adjust header offset for discount banner height
+  useEffect(() => {
+    const hasGeneral = generalDiscount?.active && generalDiscount.percentage > 0
+    const hasStudent = user?.studentDiscount > 0
+    const bannerCount = (hasGeneral ? 1 : 0) + (hasStudent ? 1 : 0)
+    document.documentElement.style.setProperty('--banner-height', bannerCount > 0 ? `${bannerCount * 32}px` : '0px')
+  }, [generalDiscount, user])
 
   // Blocked emails and phone numbers
   const blockedEmails = [
-    'harigajja121@gmail.com',
     'harigajja10@gmail.com',
     'harigajja010@gmail.com',
     'sanvichowdary10@gmail.com'
@@ -201,7 +169,7 @@ function App() {
     return domainRegex.test(domain)
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     // Require login before sending the form
@@ -211,7 +179,7 @@ function App() {
     }
     
     const email = formRef.current.from_email.value.toLowerCase().trim()
-    const phone = formRef.current.from_phone.value.replace(/[\s\-\+\(\)]/g, '').slice(-10)
+    const phone = formRef.current.from_phone.value.replace(/[\s\-+()]/g, '').slice(-10)
     
     // Validate email format
     if (!isValidEmail(email)) {
@@ -226,32 +194,70 @@ function App() {
       setTimeout(() => setFormStatus({ loading: false, success: false, error: false, blocked: false, invalid: false }), 5000)
       return
     }
-    
+
     setFormStatus({ loading: true, success: false, error: false, blocked: false, invalid: false })
-    
-    emailjs.sendForm(
-      'service_3zwkhxs',
-      'template_z8lgy9n',
-      formRef.current,
-      'D-rf-UlU0D8SOLlir'
-    )
-    .then(() => {
+
+    try {
+      // Send email via emailjs
+      await emailjs.sendForm(
+        'service_3zwkhxs',
+        'template_z8lgy9n',
+        formRef.current,
+        'D-rf-UlU0D8SOLlir'
+      )
+
       setFormStatus({ loading: false, success: true, error: false, blocked: false, invalid: false })
       formRef.current.reset()
+      setSelectedServices([])
       setTimeout(() => setFormStatus({ loading: false, success: false, error: false, blocked: false, invalid: false }), 5000)
-    })
-    .catch(() => {
+    } catch {
       setFormStatus({ loading: false, success: false, error: true, blocked: false, invalid: false })
       setTimeout(() => setFormStatus({ loading: false, success: false, error: false, blocked: false, invalid: false }), 5000)
-    })
+    }
+  }
+
+  const handleStudentSubmit = async (e) => {
+    e.preventDefault()
+
+    if (!user) {
+      setShowLoginModal(true)
+      return
+    }
+
+    if (!collegeName.trim() || !studentIdFile) {
+      setStudentFormStatus({ loading: false, success: false, error: true })
+      setTimeout(() => setStudentFormStatus({ loading: false, success: false, error: false }), 5000)
+      return
+    }
+
+    setStudentFormStatus({ loading: true, success: false, error: false })
+
+    try {
+      const uploadResult = await uploadStudentId(studentIdFile)
+
+      await submitStudentRequest({
+        name: user.name,
+        email: user.email,
+        phone: user.phone || '',
+        collegeName,
+        studentIdUrl: uploadResult.url,
+        studentIdPublicId: uploadResult.publicId,
+        message: '',
+      })
+
+      setStudentFormStatus({ loading: false, success: true, error: false })
+      setCollegeName('')
+      setStudentIdFile(null)
+      setStudentIdPreview('')
+      setTimeout(() => setStudentFormStatus({ loading: false, success: false, error: false }), 5000)
+    } catch {
+      setStudentFormStatus({ loading: false, success: false, error: true })
+      setTimeout(() => setStudentFormStatus({ loading: false, success: false, error: false }), 5000)
+    }
   }
 
   return (
     <>
-      {/* Custom Cursor */}
-      <div className="cursor" ref={cursorRef}></div>
-      <div className="cursor-follower" ref={cursorFollowerRef}></div>
-
       {/* Grid background */}
       <div className="grid-lines" aria-hidden="true"></div>
 
@@ -263,6 +269,24 @@ function App() {
         <div className="particle"></div>
         <div className="particle"></div>
       </div>
+
+      {/* Discount Banner */}
+      {(generalDiscount?.active && generalDiscount.percentage > 0 || user?.studentDiscount > 0) && (
+        <div className="discount-banner">
+          {generalDiscount?.active && generalDiscount.percentage > 0 && (
+            <div className="discount-banner-item discount-banner-general">
+              <i className="fas fa-tags"></i>
+              <span>🔥 {generalDiscount.note || 'Special Offer'} — <strong>{generalDiscount.percentage}% OFF</strong> on all services!</span>
+            </div>
+          )}
+          {user?.studentDiscount > 0 && (
+            <div className="discount-banner-item discount-banner-student">
+              <i className="fas fa-graduation-cap"></i>
+              <span>🎉 Student Discount Active — You get <strong>{user.studentDiscount}% OFF</strong> on all services!</span>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Header */}
       <header className={`site-header ${headerScrolled ? 'scrolled' : ''}`}>
@@ -283,7 +307,7 @@ function App() {
             <li><a href="#services" className={`nav-link ${activeSection === 'services' ? 'active' : ''}`} onClick={(e) => scrollToSection(e, 'services')}><span>Services</span></a></li>
             <li><a href="#team" className={`nav-link ${activeSection === 'team' ? 'active' : ''}`} onClick={(e) => scrollToSection(e, 'team')}><span>Team</span></a></li>
             <li><a href="#projects" className={`nav-link ${activeSection === 'projects' ? 'active' : ''}`} onClick={(e) => scrollToSection(e, 'projects')}><span>Work</span></a></li>
-            <li><a href="#budget-calculator" className={`nav-link ${activeSection === 'budget-calculator' ? 'active' : ''}`} onClick={(e) => scrollToSection(e, 'budget-calculator')}><span>Pricing</span></a></li>
+            <li><a href="#student-discount" className={`nav-link ${activeSection === 'student-discount' ? 'active' : ''}`} onClick={(e) => scrollToSection(e, 'student-discount')}><span>Student Discount</span></a></li>
             <li><a href="#contact" className="nav-link cta" onClick={(e) => scrollToSection(e, 'contact')}><span>Hire Us</span></a></li>
           </ul>
         </nav>
@@ -358,21 +382,51 @@ function App() {
           </div>
         </section>
 
-        {/* MARQUEE */}
-        <div className="marquee">
-          <div className="marquee-content">
-            <span>REACT</span>
-            <span className="filled">NODE.JS</span>
-            <span>MONGODB</span>
-            <span className="filled">EXPRESS</span>
-            <span>PYTHON</span>
-            <span className="filled">AI/ML</span>
-            <span>REACT</span>
-            <span className="filled">NODE.JS</span>
-            <span>MONGODB</span>
-            <span className="filled">EXPRESS</span>
-            <span>PYTHON</span>
-            <span className="filled">AI/ML</span>
+        {/* MARQUEE CRISS-CROSS */}
+        <div className="marquee-criss-cross">
+          <div className="marquee marquee-white">
+            <div className="marquee-content">
+              <span>REACT</span>
+              <span className="filled">NODE.JS</span>
+              <span>MONGODB</span>
+              <span className="filled">EXPRESS</span>
+              <span>PYTHON</span>
+              <span className="filled">AI/ML</span>
+              <span>FULL STACK</span>
+              <span className="filled">DEVOPS</span>
+            </div>
+            <div className="marquee-content" aria-hidden="true">
+              <span>REACT</span>
+              <span className="filled">NODE.JS</span>
+              <span>MONGODB</span>
+              <span className="filled">EXPRESS</span>
+              <span>PYTHON</span>
+              <span className="filled">AI/ML</span>
+              <span>FULL STACK</span>
+              <span className="filled">DEVOPS</span>
+            </div>
+          </div>
+          <div className="marquee marquee-black">
+            <div className="marquee-content marquee-reverse">
+              <span className="filled">REACT</span>
+              <span>NODE.JS</span>
+              <span className="filled">MONGODB</span>
+              <span>EXPRESS</span>
+              <span className="filled">PYTHON</span>
+              <span>AI/ML</span>
+              <span className="filled">FULL STACK</span>
+              <span>DEVOPS</span>
+            </div>
+            <div className="marquee-content marquee-reverse" aria-hidden="true">
+              <span className="filled">REACT</span>
+              <span>NODE.JS</span>
+              <span className="filled">MONGODB</span>
+              <span>EXPRESS</span>
+              <span className="filled">PYTHON</span>
+              <span>AI/ML</span>
+              <span className="filled">FULL STACK</span>
+              <span>DEVOPS</span>
+            </div>
           </div>
         </div>
 
@@ -466,7 +520,15 @@ function App() {
                   <li><i className="fas fa-check"></i> Modern UI/UX design</li>
                 </ul>
                 <div className="service-cta">
-                  <span className="service-price">Starting at 3,999/-</span>
+                  {getDiscountedPrice(4999) < 4999 ? (
+                    <>
+                      <span className="service-price service-price--original">Starting at ₹4,999/-</span>
+                      <span className="service-price service-price--discount">Now ₹{getDiscountedPrice(4999).toLocaleString()}/-</span>
+                      <span className="service-discount-badge">{getTotalDiscount()}% OFF</span>
+                    </>
+                  ) : (
+                    <span className="service-price">Starting at ₹4,999/-</span>
+                  )}
                 </div>
               </div>
 
@@ -482,7 +544,15 @@ function App() {
                   <li><i className="fas fa-check"></i> Professional hosting</li>
                 </ul>
                 <div className="service-cta">
-                  <span className="service-price">Starting at 4,999/-</span>
+                  {getDiscountedPrice(5999) < 5999 ? (
+                    <>
+                      <span className="service-price service-price--original">Starting at ₹5,999/-</span>
+                      <span className="service-price service-price--discount">Now ₹{getDiscountedPrice(5999).toLocaleString()}/-</span>
+                      <span className="service-discount-badge">{getTotalDiscount()}% OFF</span>
+                    </>
+                  ) : (
+                    <span className="service-price">Starting at ₹5,999/-</span>
+                  )}
                 </div>
               </div>
 
@@ -498,7 +568,15 @@ function App() {
                   <li><i className="fas fa-check"></i> Secure authentication</li>
                 </ul>
                 <div className="service-cta">
-                  <span className="service-price">Starting at 7,999/-</span>
+                  {getDiscountedPrice(8999) < 8999 ? (
+                    <>
+                      <span className="service-price service-price--original">Starting at ₹8,999/-</span>
+                      <span className="service-price service-price--discount">Now ₹{getDiscountedPrice(8999).toLocaleString()}/-</span>
+                      <span className="service-discount-badge">{getTotalDiscount()}% OFF</span>
+                    </>
+                  ) : (
+                    <span className="service-price">Starting at ₹8,999/-</span>
+                  )}
                 </div>
               </div>
 
@@ -515,7 +593,15 @@ function App() {
                   <li><i className="fas fa-check"></i> Cloud hosting setup</li>
                 </ul>
                 <div className="service-cta">
-                  <span className="service-price">Starting at 8,999/-</span>
+                  {getDiscountedPrice(9999) < 9999 ? (
+                    <>
+                      <span className="service-price service-price--original">Starting at ₹9,999/-</span>
+                      <span className="service-price service-price--discount">Now ₹{getDiscountedPrice(9999).toLocaleString()}/-</span>
+                      <span className="service-discount-badge">{getTotalDiscount()}% OFF</span>
+                    </>
+                  ) : (
+                    <span className="service-price">Starting at ₹9,999/-</span>
+                  )}
                 </div>
               </div>
 
@@ -531,7 +617,15 @@ function App() {
                   <li><i className="fas fa-check"></i> Smart automation</li>
                 </ul>
                 <div className="service-cta">
-                  <span className="service-price">Starting at 10,999/-</span>
+                  {getDiscountedPrice(11999) < 11999 ? (
+                    <>
+                      <span className="service-price service-price--original">Starting at ₹11,999/-</span>
+                      <span className="service-price service-price--discount">Now ₹{getDiscountedPrice(11999).toLocaleString()}/-</span>
+                      <span className="service-discount-badge">{getTotalDiscount()}% OFF</span>
+                    </>
+                  ) : (
+                    <span className="service-price">Starting at ₹11,999/-</span>
+                  )}
                 </div>
               </div>
 
@@ -548,7 +642,15 @@ function App() {
                   <li><i className="fas fa-check"></i> Custom domain & hosting</li>
                 </ul>
                 <div className="service-cta">
-                  <span className="service-price">Starting at 11,999/-</span>
+                  {getDiscountedPrice(12999) < 12999 ? (
+                    <>
+                      <span className="service-price service-price--original">Starting at ₹12,999/-</span>
+                      <span className="service-price service-price--discount">Now ₹{getDiscountedPrice(12999).toLocaleString()}/-</span>
+                      <span className="service-discount-badge">{getTotalDiscount()}% OFF</span>
+                    </>
+                  ) : (
+                    <span className="service-price">Starting at ₹12,999/-</span>
+                  )}
                 </div>
               </div>
             </div>
@@ -837,211 +939,95 @@ function App() {
           </div>
         </section>
 
-        {/* BUDGET CALCULATOR SECTION */}
-        <section id="budget-calculator" className="section budget-section">
+        {/* STUDENT DISCOUNT SECTION */}
+        <section id="student-discount" className="section">
           <div className="content">
             <div className="section-header center">
-              <p className="eyebrow reveal"><i className="fas fa-calculator"></i> Budget Calculator</p>
-              <h2 className="display-md reveal delay-100">Estimate Your <span className="text-gradient">Project Cost</span></h2>
-              <p className="section-desc reveal delay-200">Select the features you need and get an instant quote</p>
+              <p className="eyebrow reveal"><i className="fas fa-graduation-cap"></i> Student Discount</p>
+              <h2 className="display-md reveal delay-100">Exclusive <span className="text-gradient">Student Offers</span></h2>
+              <p className="section-desc reveal delay-200">Verify your student status and unlock special discounts on all our services.</p>
             </div>
 
-            <div className="budget-calculator-container reveal delay-300">
-              <div className="budget-options">
-                {/* Website Type */}
-                <div className="budget-group">
-                  <h3><i className="fas fa-laptop-code"></i> Website Type</h3>
-                  <div className="budget-radio-group">
-                    <label className={`budget-radio ${budgetOptions.websiteType === 'frontend' ? 'selected' : ''}`}>
-                      <input
-                        type="radio"
-                        name="websiteType"
-                        checked={budgetOptions.websiteType === 'frontend'}
-                        onChange={() => handleBudgetChange('websiteType', 'frontend')}
-                      />
-                      <span className="radio-content">
-                        <span className="radio-title">Frontend Only</span>
-                      </span>
-                    </label>
-                    <label className={`budget-radio ${budgetOptions.websiteType === 'fullstack' ? 'selected' : ''}`}>
-                      <input
-                        type="radio"
-                        name="websiteType"
-                        checked={budgetOptions.websiteType === 'fullstack'}
-                        onChange={() => handleBudgetChange('websiteType', 'fullstack')}
-                      />
-                      <span className="radio-content">
-                        <span className="radio-title">Full Stack</span>
-                      </span>
-                    </label>
-                  </div>
+            <div className="student-section-grid reveal delay-300">
+              <div className="student-section-info">
+                <div className="student-benefit-card">
+                  <div className="student-benefit-icon"><i className="fas fa-percent"></i></div>
+                  <h4>Special Pricing</h4>
+                  <p>Get exclusive discounts on all our services as a verified student.</p>
                 </div>
-
-                {/* Add-ons */}
-                <div className="budget-group">
-                  <h3><i className="fas fa-puzzle-piece"></i> Add-ons</h3>
-                  <div className="budget-checkbox-group">
-                    <label className={`budget-checkbox ${budgetOptions.customDomain ? 'selected' : ''}`}>
-                      <input
-                        type="checkbox"
-                        checked={budgetOptions.customDomain}
-                        onChange={(e) => handleBudgetChange('customDomain', e.target.checked)}
-                      />
-                      <span className="checkbox-content">
-                        <i className="fas fa-globe"></i>
-                        <span className="checkbox-title">Custom Domain</span>
-                      </span>
-                    </label>
-                    <label className={`budget-checkbox ${budgetOptions.aiChat ? 'selected' : ''}`}>
-                      <input
-                        type="checkbox"
-                        checked={budgetOptions.aiChat}
-                        onChange={(e) => handleBudgetChange('aiChat', e.target.checked)}
-                      />
-                      <span className="checkbox-content">
-                        <i className="fas fa-robot"></i>
-                        <span className="checkbox-title">AI Chat Integration</span>
-                      </span>
-                    </label>
-                    <label className={`budget-checkbox ${budgetOptions.seoOptimization ? 'selected' : ''}`}>
-                      <input
-                        type="checkbox"
-                        checked={budgetOptions.seoOptimization}
-                        onChange={(e) => handleBudgetChange('seoOptimization', e.target.checked)}
-                      />
-                      <span className="checkbox-content">
-                        <i className="fas fa-search"></i>
-                        <span className="checkbox-title">SEO Optimization</span>
-                      </span>
-                    </label>
-                    <label className={`budget-checkbox ${budgetOptions.analyticsIntegration ? 'selected' : ''}`}>
-                      <input
-                        type="checkbox"
-                        checked={budgetOptions.analyticsIntegration}
-                        onChange={(e) => handleBudgetChange('analyticsIntegration', e.target.checked)}
-                      />
-                      <span className="checkbox-content">
-                        <i className="fas fa-chart-line"></i>
-                        <span className="checkbox-title">Analytics Integration</span>
-                      </span>
-                    </label>
-                    <label className={`budget-checkbox ${budgetOptions.paymentGateway ? 'selected' : ''}`}>
-                      <input
-                        type="checkbox"
-                        checked={budgetOptions.paymentGateway}
-                        onChange={(e) => handleBudgetChange('paymentGateway', e.target.checked)}
-                      />
-                      <span className="checkbox-content">
-                        <i className="fas fa-credit-card"></i>
-                        <span className="checkbox-title">Payment Gateway</span>
-                      </span>
-                    </label>
-                    <label className={`budget-checkbox ${budgetOptions.adminDashboard ? 'selected' : ''}`}>
-                      <input
-                        type="checkbox"
-                        checked={budgetOptions.adminDashboard}
-                        onChange={(e) => handleBudgetChange('adminDashboard', e.target.checked)}
-                      />
-                      <span className="checkbox-content">
-                        <i className="fas fa-gauge-high"></i>
-                        <span className="checkbox-title">Admin Dashboard</span>
-                      </span>
-                    </label>
-                  </div>
+                <div className="student-benefit-card">
+                  <div className="student-benefit-icon"><i className="fas fa-bolt"></i></div>
+                  <h4>Quick Verification</h4>
+                  <p>Upload your student ID and get verified within 24 hours.</p>
                 </div>
-
-                {/* Extra Pages */}
-                <div className="budget-group">
-                  <h3><i className="fas fa-file-alt"></i> Extra Pages</h3>
-                  <p className="budget-note">4 pages included.</p>
-                  <div className="budget-counter">
-                    <button
-                      className="counter-btn"
-                      onClick={() => handleBudgetChange('extraPages', Math.max(0, budgetOptions.extraPages - 1))}
-                    >
-                      <i className="fas fa-minus"></i>
-                    </button>
-                    <span className="counter-value">{budgetOptions.extraPages}</span>
-                    <button
-                      className="counter-btn"
-                      onClick={() => handleBudgetChange('extraPages', budgetOptions.extraPages + 1)}
-                    >
-                      <i className="fas fa-plus"></i>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Maintenance Package */}
-                <div className="budget-group">
-                  <h3><i className="fas fa-wrench"></i> Maintenance Package (Monthly)</h3>
-                  <div className="budget-radio-group maintenance">
-                    <label className={`budget-radio ${budgetOptions.maintenancePackage === 'basic' ? 'selected' : ''}`}>
-                      <input
-                        type="radio"
-                        name="maintenance"
-                        checked={budgetOptions.maintenancePackage === 'basic'}
-                        onChange={() => handleBudgetChange('maintenancePackage', 'basic')}
-                      />
-                      <span className="radio-content">
-                        <span className="radio-title">Basic</span>
-                        <span className="radio-desc">Bug fixes & updates</span>
-                        <span className="radio-price">₹999/mo</span>
-                      </span>
-                    </label>
-                    <label className={`budget-radio ${budgetOptions.maintenancePackage === 'premium' ? 'selected' : ''}`}>
-                      <input
-                        type="radio"
-                        name="maintenance"
-                        checked={budgetOptions.maintenancePackage === 'premium'}
-                        onChange={() => handleBudgetChange('maintenancePackage', 'premium')}
-                      />
-                      <span className="radio-content">
-                        <span className="radio-title">Medium</span>
-                        <span className="radio-desc">Priority support + features</span>
-                        <span className="radio-price">₹1,999/mo</span>
-                      </span>
-                    </label>
-                    <label className={`budget-radio ${budgetOptions.maintenancePackage === 'enterprise' ? 'selected' : ''}`}>
-                      <input
-                        type="radio"
-                        name="maintenance"
-                        checked={budgetOptions.maintenancePackage === 'enterprise'}
-                        onChange={() => handleBudgetChange('maintenancePackage', 'enterprise')}
-                      />
-                      <span className="radio-content">
-                        <span className="radio-title">Premium</span>
-                        <span className="radio-desc">Bug fixes & updates + 24/7 support +Priority support + features+ content updates</span>
-                        <span className="radio-price">₹3,999/mo</span>
-                      </span>
-                    </label>
-                  </div>
+                <div className="student-benefit-card">
+                  <div className="student-benefit-icon"><i className="fas fa-shield-alt"></i></div>
+                  <h4>Secure Process</h4>
+                  <p>Your student ID is kept confidential and used only for verification.</p>
                 </div>
               </div>
 
-              {/* Total Display */}
-              <div className="budget-total">
-                <div className="budget-summary">
-                  <h3>Your Estimated Budget</h3>
-                  <div className="total-amount">
-                    <span className="currency">₹</span>
-                    <span className="amount">{calculateBudget().toLocaleString('en-IN')}</span>
-                    <span className="suffix">/-</span>
-                  </div>
-                  <p className="maintenance-note">
-                    + ₹{budgetOptions.maintenancePackage === 'basic' ? '999' : budgetOptions.maintenancePackage === 'premium' ? '1,999' : '3,999'}/month maintenance
-                  </p>
-                  <div className="budget-includes">
-                    <p><i className="fas fa-check"></i> Responsive Design</p>
-                    <p><i className="fas fa-check"></i> Mobile Friendly</p>
-                    <p><i className="fas fa-check"></i> 4 Pages Included</p>
-                    <p><i className="fas fa-check"></i> Free Consultation</p>
-                  </div>
-                  <a href="#contact" className="btn primary btn-magnetic" onClick={(e) => scrollToSection(e, 'contact')}>
-                    <span>Get Started</span>
-                    <i className="fas fa-arrow-right"></i>
-                  </a>
+              <form className="student-request-form" onSubmit={handleStudentSubmit}>
+                <div className="form-header">
+                  <h3><i className="fas fa-graduation-cap"></i> Request Student Discount</h3>
+                  <p>Fill in your details and upload your student ID</p>
                 </div>
-              </div>
+                {studentFormStatus.success && (
+                  <div className="form-message success">
+                    <i className="fas fa-check-circle"></i> Request submitted! We'll review and get back to you soon.
+                  </div>
+                )}
+                {studentFormStatus.error && (
+                  <div className="form-message error">
+                    <i className="fas fa-exclamation-circle"></i> Failed to submit. Please fill all fields and try again.
+                  </div>
+                )}
+                {!user && (
+                  <div className="form-message info">
+                    <i className="fas fa-info-circle"></i> Please <span className="login-prompt" onClick={() => setShowLoginModal(true)}>log in</span> to submit a student discount request.
+                  </div>
+                )}
+                <div className="field">
+                  <label htmlFor="student_name"><i className="fas fa-user"></i> Your Name</label>
+                  <input type="text" id="student_name" placeholder="Your name" required defaultValue={user?.name || ''} readOnly={!!user} className={user ? 'field-locked' : ''} />
+                </div>
+                <div className="field">
+                  <label htmlFor="student_college"><i className="fas fa-university"></i> College Name</label>
+                  <input type="text" id="student_college" placeholder="Enter your college name" value={collegeName} onChange={(e) => setCollegeName(e.target.value)} required />
+                </div>
+                <div className="field">
+                  <label><i className="fas fa-id-card"></i> Student ID Photo</label>
+                  <div className="student-id-upload">
+                    <label htmlFor="student_id_file" className="upload-label">
+                      {studentIdPreview ? (
+                        <img src={studentIdPreview} alt="Student ID preview" className="student-id-preview" />
+                      ) : (
+                        <span className="upload-placeholder">
+                          <i className="fas fa-cloud-upload-alt"></i>
+                          <span>Click to upload Student ID</span>
+                        </span>
+                      )}
+                    </label>
+                    <input
+                      type="file"
+                      id="student_id_file"
+                      accept="image/*"
+                      className="file-input-hidden"
+                      onChange={(e) => {
+                        const file = e.target.files[0]
+                        if (file) {
+                          setStudentIdFile(file)
+                          setStudentIdPreview(URL.createObjectURL(file))
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+                <button type="submit" className="btn primary full btn-magnetic" disabled={studentFormStatus.loading}>
+                  <i className={studentFormStatus.loading ? "fas fa-spinner fa-spin" : "fas fa-paper-plane"}></i>
+                  {studentFormStatus.loading ? 'Submitting...' : 'Submit Request'}
+                </button>
+              </form>
             </div>
           </div>
         </section>
@@ -1163,6 +1149,55 @@ function App() {
                   <label htmlFor="phone"><i className="fas fa-phone"></i> Phone Number</label>
                   <input type="tel" id="phone" name="from_phone" placeholder="Enter your phone number" required />
                 </div>
+                <div className="field">
+                  <label><i className="fas fa-cogs"></i> Select Services</label>
+                  <div className="service-checkboxes">
+                    {SERVICES.map((svc) => {
+                      const discounted = getDiscountedPrice(svc.price)
+                      const hasDiscount = discounted < svc.price
+                      return (
+                        <label key={svc.id} className={`service-checkbox ${selectedServices.includes(svc.id) ? 'selected' : ''}`}>
+                          <input
+                            type="checkbox"
+                            checked={selectedServices.includes(svc.id)}
+                            onChange={(e) => {
+                              setSelectedServices(prev =>
+                                e.target.checked ? [...prev, svc.id] : prev.filter(s => s !== svc.id)
+                              )
+                            }}
+                          />
+                          <span className="service-checkbox-name">{svc.name}</span>
+                          <span className="service-checkbox-price">
+                            {hasDiscount ? (
+                              <>
+                                <span className="service-checkbox-original">₹{svc.price.toLocaleString()}</span>
+                                <span className="service-checkbox-discounted">₹{discounted.toLocaleString()}</span>
+                              </>
+                            ) : (
+                              <>₹{svc.price.toLocaleString()}</>
+                            )}
+                          </span>
+                        </label>
+                      )
+                    })}
+                  </div>
+                  {selectedServices.length > 0 && (
+                    <div className="service-quote-summary">
+                      <div className="quote-total-label">Estimated Total</div>
+                      <div className="quote-total-price">
+                        ₹{selectedServices.reduce((sum, id) => {
+                          const svc = SERVICES.find(s => s.id === id)
+                          return sum + (svc ? getDiscountedPrice(svc.price) : 0)
+                        }, 0).toLocaleString()}/-
+                      </div>
+                      {getTotalDiscount() > 0 && (
+                        <div className="quote-discount-note">{getTotalDiscount()}% discount applied</div>
+                      )}
+                    </div>
+                  )}
+                </div>
+                <input type="hidden" name="selected_services" value={selectedServices.map(id => SERVICES.find(s => s.id === id)?.name).filter(Boolean).join(', ')} />
+                <input type="hidden" name="quote_total" value={selectedServices.reduce((sum, id) => { const svc = SERVICES.find(s => s.id === id); return sum + (svc ? getDiscountedPrice(svc.price) : 0) }, 0)} />
                 <div className="field">
                   <label htmlFor="message"><i className="fas fa-comment-dots"></i> Project Details</label>
                   <textarea id="message" name="message" placeholder="Tell us about your project..." required></textarea>
