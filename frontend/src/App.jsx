@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import emailjs from '@emailjs/browser'
 import { useAuth } from './auth/AuthContext'
 import LoginModal from './auth/LoginModal'
-import { trackPageView, uploadStudentId, submitStudentRequest, fetchDiscount } from './auth/api'
+import { trackPageView, uploadStudentId, submitStudentRequest, fetchDiscount, logEmailSend } from './auth/api'
 import './App.css'
 
 // Import images for production build
@@ -231,6 +231,8 @@ function App() {
         formRef.current,
         'D-rf-UlU0D8SOLlir'
       )
+
+      logEmailSend()
 
       setFormStatus({ loading: false, success: true, error: false, blocked: false, invalid: false })
       formRef.current.reset()

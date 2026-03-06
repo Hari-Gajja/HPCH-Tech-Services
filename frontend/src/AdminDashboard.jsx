@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from './auth/AuthContext';
-import { fetchAdminStats, fetchStudentRequests, updateStudentRequestStatus, deleteStudentId, deleteStudentRequest, fetchDiscount, setDiscount, removeAllStudentDiscounts } from './auth/api';
+import { fetchAdminStats, fetchStudentRequests, updateStudentRequestStatus, deleteStudentId, deleteStudentRequest, fetchDiscount, setDiscount, removeAllStudentDiscounts, fetchEmailUsage } from './auth/api';
 import './AdminDashboard.css';
 
 export default function AdminDashboard() {
@@ -18,16 +18,17 @@ export default function AdminDashboard() {
   const [currentDiscount, setCurrentDiscount] = useState(null);
   const [discountSaving, setDiscountSaving] = useState(false);
   const [studentImageModal, setStudentImageModal] = useState(null);
-
+  const [emailUsage, setEmailUsage] = useState(null);
 
   const loadStats = useCallback(async () => {
     try {
       setLoading(true);
       setError('');
-      const [data, stuRes, discData] = await Promise.all([
+      const [data, stuRes, discData, emailData] = await Promise.all([
         fetchAdminStats(),
         fetchStudentRequests().catch(() => ({ requests: [] })),
         fetchDiscount().catch(() => null),
+        fetchEmailUsage().catch(() => null),
       ]);
       setStats(data.stats);
       setViewsChart(data.viewsChart || []);
@@ -35,6 +36,7 @@ export default function AdminDashboard() {
       setAllUsers(data.allUsers || []);
       setStudentRequests(stuRes.requests || []);
       setCurrentDiscount(discData);
+      setEmailUsage(emailData);
     } catch (err) {
       setError(err.message || 'Failed to load dashboard data');
     } finally {
@@ -254,6 +256,39 @@ export default function AdminDashboard() {
                 </div>
               ))}
             </div>
+
+            {/* EmailJS Usage */}
+            {emailUsage && (
+              <div className="ad-section ad-email-usage">
+                <h3 className="ad-section-title"><i className="fas fa-envelope"></i> EmailJS Usage — {new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' })}</h3>
+                <div className="ad-email-usage-body">
+                  <div className="ad-email-stats-row">
+                    <div className="ad-email-stat">
+                      <span className="ad-email-stat-value" style={{ color: '#ff6b6b' }}>{emailUsage.sent}</span>
+                      <span className="ad-email-stat-label">Sent</span>
+                    </div>
+                    <div className="ad-email-stat">
+                      <span className="ad-email-stat-value" style={{ color: '#00ff88' }}>{emailUsage.remaining}</span>
+                      <span className="ad-email-stat-label">Remaining</span>
+                    </div>
+                    <div className="ad-email-stat">
+                      <span className="ad-email-stat-value" style={{ color: '#00d4ff' }}>{emailUsage.limit}</span>
+                      <span className="ad-email-stat-label">Monthly Limit</span>
+                    </div>
+                  </div>
+                  <div className="ad-email-bar-wrap">
+                    <div
+                      className={`ad-email-bar-fill${emailUsage.sent / emailUsage.limit > 0.8 ? ' ad-email-bar--danger' : ''}`}
+                      style={{ width: `${Math.min(100, (emailUsage.sent / emailUsage.limit) * 100)}%` }}
+                    />
+                  </div>
+                  <p className="ad-email-bar-label">
+                    {Math.round((emailUsage.sent / emailUsage.limit) * 100)}% used
+                    {emailUsage.sent / emailUsage.limit > 0.8 && <span className="ad-email-warn"> — Running low!</span>}
+                  </p>
+                </div>
+              </div>
+            )}
 
             {/* Recent Users */}
             <div className="ad-section">

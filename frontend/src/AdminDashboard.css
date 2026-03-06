@@ -342,6 +342,82 @@
   margin: 0 0 1rem;
 }
 
+/* ---------- EmailJS usage ---------- */
+.ad-email-usage {
+  margin-bottom: 1.5rem;
+}
+
+.ad-email-usage .ad-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ad-email-usage .ad-section-title i {
+  color: #00d4ff;
+}
+
+.ad-email-usage-body {
+  padding: 1rem 0 0;
+}
+
+.ad-email-stats-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.ad-email-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+
+.ad-email-stat-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.ad-email-stat-label {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 0.2rem;
+}
+
+.ad-email-bar-wrap {
+  width: 100%;
+  height: 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.ad-email-bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #00d4ff, #00ff88);
+  transition: width 0.6s ease;
+}
+
+.ad-email-bar-fill.ad-email-bar--danger {
+  background: linear-gradient(90deg, #ffee00, #ff6b6b);
+}
+
+.ad-email-bar-label {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 0.45rem;
+}
+
+.ad-email-warn {
+  color: #ff6b6b;
+  font-weight: 700;
+}
+
 /* ---------- recent users ---------- */
 .ad-recent-list {
   display: flex;

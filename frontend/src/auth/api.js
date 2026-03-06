@@ -206,3 +206,26 @@ export async function removeAllStudentDiscounts() {
 
   return res.json();
 }
+
+// Log an email send (called after successful emailjs.sendForm)
+export async function logEmailSend() {
+  try {
+    await fetch(`${API_URL}/api/admin/log-email`, { method: 'POST' });
+  } catch {
+    // silent fail – logging should never break the app
+  }
+}
+
+// Fetch email usage for current month (admin only)
+export async function fetchEmailUsage() {
+  const res = await fetch(`${API_URL}/api/admin/email-usage`, {
+    credentials: 'include',
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to fetch email usage');
+  }
+
+  return res.json();
+}

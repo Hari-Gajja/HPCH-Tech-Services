@@ -6,6 +6,7 @@ import User from '../models/User.js';
 import SiteView from '../models/SiteView.js';
 import Discount from '../models/Discount.js';
 import StudentRequest from '../models/StudentRequest.js';
+import EmailLog from '../models/EmailLog.js';
 
 const router = express.Router();
 
@@ -321,6 +322,31 @@ router.delete('/student-discounts', requireAdmin, async (_req, res) => {
   } catch (err) {
     console.error('Remove all student discounts error:', err.message);
     return res.status(500).json({ error: 'Failed to remove student discounts' });
+  }
+});
+
+// ---------- Log an email send (called from frontend after emailjs.sendForm) ----------
+router.post('/log-email', async (_req, res) => {
+  try {
+    await EmailLog.create({ sentAt: new Date() });
+    return res.json({ success: true });
+  } catch (err) {
+    console.error('Log email error:', err.message);
+    return res.status(500).json({ error: 'Failed to log email' });
+  }
+});
+
+// ---------- Get email usage for current month (admin only) ----------
+router.get('/email-usage', requireAdmin, async (_req, res) => {
+  try {
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const sentThisMonth = await EmailLog.countDocuments({ sentAt: { $gte: startOfMonth } });
+    const limit = 200; // EmailJS free tier
+    return res.json({ sent: sentThisMonth, limit, remaining: Math.max(0, limit - sentThisMonth) });
+  } catch (err) {
+    console.error('Email usage error:', err.message);
+    return res.status(500).json({ error: 'Failed to fetch email usage' });
   }
 });
 
