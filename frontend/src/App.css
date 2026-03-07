@@ -4035,6 +4035,18 @@ p {
   50% { transform: scale(1.2); }
 }
 
+.footer-privacy-link {
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-privacy-link:hover {
+  color: var(--neon-pink);
+  text-decoration: underline;
+}
+
 .footer-links {
   display: flex;
   gap: 0.5rem;
