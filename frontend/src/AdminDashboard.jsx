@@ -297,7 +297,7 @@ export default function AdminDashboard() {
                 {recentUsers.map((u) => (
                   <div className="ad-recent-item" key={u._id}>
                     <img
-                      src={u.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name)}&background=1a1a2e&color=fff`}
+                      src={u.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name)}&background=f0f1f3&color=171717`}
                       alt=""
                       className="ad-recent-avatar"
                     />
@@ -337,7 +337,7 @@ export default function AdminDashboard() {
                       <td>
                         <div className="ad-table-user">
                           <img
-                            src={u.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name)}&background=1a1a2e&color=fff`}
+                            src={u.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name)}&background=f0f1f3&color=171717`}
                             alt=""
                             className="ad-table-avatar"
                           />
@@ -455,8 +455,8 @@ export default function AdminDashboard() {
                           const y = padT + plotH - (i / yTicks) * plotH;
                           return (
                             <g key={`y-${i}`}>
-                              <line x1={padL} y1={y} x2={padL + plotW} y2={y} stroke="rgba(255,255,255,0.05)" strokeWidth="1" strokeDasharray={i === 0 ? 'none' : '4 4'} />
-                              <text x={padL - 8} y={y + 3.5} textAnchor="end" fill="rgba(255,255,255,0.3)" fontSize="9" fontWeight="500">{val}</text>
+                              <line x1={padL} y1={y} x2={padL + plotW} y2={y} stroke="rgba(0,0,0,0.06)" strokeWidth="1" strokeDasharray={i === 0 ? 'none' : '4 4'} />
+                              <text x={padL - 8} y={y + 3.5} textAnchor="end" fill="rgba(0,0,0,0.3)" fontSize="9" fontWeight="500">{val}</text>
                             </g>
                           );
                         })}
@@ -480,9 +480,9 @@ export default function AdminDashboard() {
                         {pts.map((p) => (
                           <g key={p.date} className="ad-line-dot-group">
                             <circle cx={p.x} cy={p.y} r="12" fill="transparent" className="ad-line-dot-hover" />
-                            <circle cx={p.x} cy={p.y} r="3.5" fill="#ff0080" stroke="#1a1a2e" strokeWidth="2" className="ad-line-dot" />
+                            <circle cx={p.x} cy={p.y} r="3.5" fill="#ff0080" stroke="#fff" strokeWidth="2" className="ad-line-dot" />
                             <g className="ad-line-tooltip-group">
-                              <rect x={p.x - 36} y={p.y - 44} width="72" height="30" rx="8" fill="rgba(15,15,25,0.92)" stroke="rgba(255,0,128,0.25)" strokeWidth="1" />
+                              <rect x={p.x - 36} y={p.y - 44} width="72" height="30" rx="8" fill="rgba(23,23,23,0.92)" stroke="rgba(255,0,128,0.25)" strokeWidth="1" />
                               <text x={p.x} y={p.y - 26} textAnchor="middle" fill="#fff" fontSize="11" fontWeight="700">{p.count}</text>
                               <text x={p.x} y={p.y - 16} textAnchor="middle" fill="rgba(255,255,255,0.35)" fontSize="7.5">views</text>
                             </g>
@@ -491,7 +491,7 @@ export default function AdminDashboard() {
 
                         {/* X-axis labels */}
                         {pts.filter((_, i) => i % Math.max(1, Math.floor(pts.length / 7)) === 0).map((p) => (
-                          <text key={p.date} x={p.x} y={chartH - 8} textAnchor="middle" fill="rgba(255,255,255,0.3)" fontSize="8.5" fontWeight="500">{formatDate(p.date)}</text>
+                          <text key={p.date} x={p.x} y={chartH - 8} textAnchor="middle" fill="rgba(0,0,0,0.3)" fontSize="8.5" fontWeight="500">{formatDate(p.date)}</text>
                         ))}
                       </svg>
                     </div>
@@ -544,7 +544,7 @@ export default function AdminDashboard() {
                                 </filter>
                               ))}
                               <filter id="pieInnerShadow">
-                                <feDropShadow dx="0" dy="0" stdDeviation="6" floodColor="rgba(0,0,0,0.5)" floodOpacity="0.5" />
+                                <feDropShadow dx="0" dy="0" stdDeviation="4" floodColor="rgba(0,0,0,0.15)" floodOpacity="0.15" />
                               </filter>
                             </defs>
                             {slices.map((sl, i) => {
@@ -568,10 +568,10 @@ export default function AdminDashboard() {
                               );
                             })}
                             {/* Center */}
-                            <circle cx={cx} cy={cy} r={innerR - 2} fill="#12121e" filter="url(#pieInnerShadow)" />
-                            <circle cx={cx} cy={cy} r={innerR - 6} fill="rgba(20,20,35,0.95)" stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
-                            <text x={cx} y={cy - 4} textAnchor="middle" fill="#fff" fontSize="18" fontWeight="800">{total.toLocaleString()}</text>
-                            <text x={cx} y={cy + 14} textAnchor="middle" fill="rgba(255,255,255,0.4)" fontSize="9" fontWeight="500" letterSpacing="0.1em">TOTAL</text>
+                            <circle cx={cx} cy={cy} r={innerR - 2} fill="#fff" filter="url(#pieInnerShadow)" />
+                            <circle cx={cx} cy={cy} r={innerR - 6} fill="#fafafa" stroke="rgba(0,0,0,0.06)" strokeWidth="1" />
+                            <text x={cx} y={cy - 4} textAnchor="middle" fill="#171717" fontSize="18" fontWeight="800">{total.toLocaleString()}</text>
+                            <text x={cx} y={cy + 14} textAnchor="middle" fill="rgba(0,0,0,0.35)" fontSize="9" fontWeight="500" letterSpacing="0.1em">TOTAL</text>
                           </svg>
                         </div>
                         <div className="ad-pie-legend">
