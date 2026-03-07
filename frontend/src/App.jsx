@@ -109,7 +109,8 @@ function App() {
 
   const formRef = useRef(null)
   const [formStatus, setFormStatus] = useState({ loading: false, success: false, error: false, blocked: false, invalid: false })
-  const [selectedServices, setSelectedServices] = useState([])
+  const [selectedService, setSelectedService] = useState('')
+  const [needSeo, setNeedSeo] = useState('')
   const [generalDiscount, setGeneralDiscount] = useState(null)
 
   // Student discount request form state
@@ -205,24 +206,22 @@ function App() {
     setFormStatus({ loading: true, success: false, error: false, blocked: false, invalid: false })
 
     try {
-      // Append selected services into the message field before sending
+      // Append selected service and SEO preference into the message field before sending
       const messageField = formRef.current.message
       const originalMessage = messageField.value
-      if (selectedServices.length > 0) {
-        const serviceLines = selectedServices.map(id => {
-          const svc = SERVICES.find(s => s.id === id)
-          if (!svc) return ''
+      let appendText = ''
+      if (selectedService) {
+        const svc = SERVICES.find(s => s.id === selectedService)
+        if (svc) {
           const discounted = getDiscountedPrice(svc.price)
-          return discounted < svc.price
+          const serviceLine = discounted < svc.price
             ? `• ${svc.name} — ₹${discounted.toLocaleString()} (was ₹${svc.price.toLocaleString()})`
             : `• ${svc.name} — ₹${svc.price.toLocaleString()}`
-        }).filter(Boolean).join('\n')
-        const total = selectedServices.reduce((sum, id) => {
-          const svc = SERVICES.find(s => s.id === id)
-          return sum + (svc ? getDiscountedPrice(svc.price) : 0)
-        }, 0)
-        messageField.value = `${originalMessage}\n\n--- Selected Services ---\n${serviceLines}\n\nEstimated Total: ₹${total.toLocaleString()}/-${getTotalDiscount() > 0 ? ` (${getTotalDiscount()}% discount applied)` : ''}`
+          appendText += `\n\n--- Selected Service ---\n${serviceLine}\n\nEstimated Total: ₹${discounted.toLocaleString()}/-${getTotalDiscount() > 0 ? ` (${getTotalDiscount()}% discount applied)` : ''}`
+        }
       }
+      appendText += `\n\nSEO Optimization: ${needSeo === 'yes' ? 'Yes' : needSeo === 'no' ? 'No' : 'Not specified'}`
+      messageField.value = originalMessage + appendText
 
       // Send email via emailjs
       await emailjs.sendForm(
@@ -236,7 +235,8 @@ function App() {
 
       setFormStatus({ loading: false, success: true, error: false, blocked: false, invalid: false })
       formRef.current.reset()
-      setSelectedServices([])
+      setSelectedService('')
+      setNeedSeo('')
       setTimeout(() => setFormStatus({ loading: false, success: false, error: false, blocked: false, invalid: false }), 5000)
     } catch {
       setFormStatus({ loading: false, success: false, error: true, blocked: false, invalid: false })
@@ -1183,28 +1183,27 @@ function App() {
                   <input type="tel" id="phone" name="from_phone" placeholder="Enter your phone number" required />
                 </div>
                 <div className="field">
-                  <label><i className="fas fa-cogs"></i> Select Services</label>
-                  <div className="service-checkboxes">
+                  <label><i className="fas fa-cogs"></i> Select a Service</label>
+                  <div className="service-radio-group">
                     {SERVICES.map((svc) => {
                       const discounted = getDiscountedPrice(svc.price)
                       const hasDiscount = discounted < svc.price
                       return (
-                        <label key={svc.id} className={`service-checkbox ${selectedServices.includes(svc.id) ? 'selected' : ''}`}>
+                        <label key={svc.id} className={`service-radio-option ${selectedService === svc.id ? 'selected' : ''}`}>
                           <input
-                            type="checkbox"
-                            checked={selectedServices.includes(svc.id)}
-                            onChange={(e) => {
-                              setSelectedServices(prev =>
-                                e.target.checked ? [...prev, svc.id] : prev.filter(s => s !== svc.id)
-                              )
-                            }}
+                            type="radio"
+                            name="service_selection"
+                            value={svc.id}
+                            checked={selectedService === svc.id}
+                            onChange={() => setSelectedService(svc.id)}
                           />
-                          <span className="service-checkbox-name">{svc.name}</span>
-                          <span className="service-checkbox-price">
+                          <span className="radio-indicator"></span>
+                          <span className="service-radio-name">{svc.name}</span>
+                          <span className="service-radio-price">
                             {hasDiscount ? (
                               <>
-                                <span className="service-checkbox-original">₹{svc.price.toLocaleString()}</span>
-                                <span className="service-checkbox-discounted">₹{discounted.toLocaleString()}</span>
+                                <span className="service-radio-original">₹{svc.price.toLocaleString()}</span>
+                                <span className="service-radio-discounted">₹{discounted.toLocaleString()}</span>
                               </>
                             ) : (
                               <>₹{svc.price.toLocaleString()}</>
@@ -1214,30 +1213,52 @@ function App() {
                       )
                     })}
                   </div>
-                  {selectedServices.length > 0 && (
-                    <div className="service-quote-summary">
-                      <div className="quote-total-label">Estimated Total</div>
-                      <div className="quote-total-price">
-                        ₹{selectedServices.reduce((sum, id) => {
-                          const svc = SERVICES.find(s => s.id === id)
-                          return sum + (svc ? getDiscountedPrice(svc.price) : 0)
-                        }, 0).toLocaleString()}/-
+                  {selectedService && (() => {
+                    const svc = SERVICES.find(s => s.id === selectedService)
+                    if (!svc) return null
+                    const discounted = getDiscountedPrice(svc.price)
+                    return (
+                      <div className="service-quote-summary">
+                        <div className="quote-total-label">Estimated Total</div>
+                        <div className="quote-total-price">₹{discounted.toLocaleString()}/-</div>
+                        {getTotalDiscount() > 0 && (
+                          <div className="quote-discount-note">{getTotalDiscount()}% discount applied</div>
+                        )}
                       </div>
-                      {getTotalDiscount() > 0 && (
-                        <div className="quote-discount-note">{getTotalDiscount()}% discount applied</div>
-                      )}
-                    </div>
-                  )}
+                    )
+                  })()}
                 </div>
-                <input type="hidden" name="selected_services" value={selectedServices.map(id => {
-                  const svc = SERVICES.find(s => s.id === id)
+                <div className="field">
+                  <label><i className="fas fa-chart-line"></i> Need SEO Optimization?</label>
+                  <div className="seo-radio-group">
+                    <label className={`seo-radio-option ${needSeo === 'yes' ? 'selected' : ''}`}>
+                      <input type="radio" name="seo_option" value="yes" checked={needSeo === 'yes'} onChange={() => setNeedSeo('yes')} />
+                      <span className="radio-indicator"></span>
+                      <span>Yes</span>
+                    </label>
+                    <label className={`seo-radio-option ${needSeo === 'no' ? 'selected' : ''}`}>
+                      <input type="radio" name="seo_option" value="no" checked={needSeo === 'no'} onChange={() => setNeedSeo('no')} />
+                      <span className="radio-indicator"></span>
+                      <span>No</span>
+                    </label>
+                  </div>
+                  <p className="seo-extra-note">*extra charges applied for seo optimization</p>
+                </div>
+                <input type="hidden" name="selected_services" value={(() => {
+                  if (!selectedService) return ''
+                  const svc = SERVICES.find(s => s.id === selectedService)
                   if (!svc) return ''
                   const discounted = getDiscountedPrice(svc.price)
                   return discounted < svc.price
                     ? `${svc.name} — ₹${discounted.toLocaleString()} (was ₹${svc.price.toLocaleString()})`
                     : `${svc.name} — ₹${svc.price.toLocaleString()}`
-                }).filter(Boolean).join(' | ')} />
-                <input type="hidden" name="quote_total" value={`₹${selectedServices.reduce((sum, id) => { const svc = SERVICES.find(s => s.id === id); return sum + (svc ? getDiscountedPrice(svc.price) : 0) }, 0).toLocaleString()}`} />
+                })()} />
+                <input type="hidden" name="seo_optimization" value={needSeo} />
+                <input type="hidden" name="quote_total" value={(() => {
+                  if (!selectedService) return '₹0'
+                  const svc = SERVICES.find(s => s.id === selectedService)
+                  return `₹${svc ? getDiscountedPrice(svc.price).toLocaleString() : '0'}`
+                })()} />
                 <div className="field">
                   <label htmlFor="message"><i className="fas fa-comment-dots"></i> Project Details</label>
                   <textarea id="message" name="message" placeholder="Tell us about your project..." required></textarea>
