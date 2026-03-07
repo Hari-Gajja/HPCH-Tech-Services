@@ -3,13 +3,17 @@
 
 User-agent: *
 Allow: /
+Disallow: /hpch/tech/services/010/admin
 
 # Sitemap location
 Sitemap: https://hpchtech.com/sitemap.xml
 
-# Crawl-delay for polite crawling
-Crawl-delay: 1
+# Googlebot (no crawl-delay needed, Google ignores it)
+User-agent: Googlebot
+Allow: /
+Disallow: /hpch/tech/services/010/admin
 
-# Disallow admin or private paths (add as needed)
-# Disallow: /admin/
-# Disallow: /private/
+User-agent: Bingbot
+Crawl-delay: 1
+Allow: /
+Disallow: /hpch/tech/services/010/admin
