@@ -4,17 +4,17 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
         xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
   <url>
-    <loc>https://hpchtech.netlify.app/</loc>
+    <loc>https://hpchtech.com/</loc>
     <lastmod>2026-03-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://hpchtech.com/" />
     <image:image>
-      <image:loc>https://hpchtech.netlify.app/logo.png</image:loc>
+      <image:loc>https://hpchtech.com/logo.png</image:loc>
       <image:title>HPCH Tech - Web Development and AI Solutions</image:title>
       <image:caption>HPCH Tech is a premier freelancing agency specializing in custom website development, full-stack solutions, and AI-powered applications based in India serving clients worldwide.</image:caption>
       <image:geo_location>India</image:geo_location>
-      <image:license>https://hpchtech.netlify.app/</image:license>
+      <image:license>https://hpchtech.com/</image:license>
     </image:image>
   </url>
 </urlset>
