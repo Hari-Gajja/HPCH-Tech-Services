@@ -10,11 +10,11 @@
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://hpchtech.com/" />
     <image:image>
-      <image:loc>https://hpchtech.com/logo.png</image:loc>
+      <image:loc>https://hpchtech.netlify.app/logo.png</image:loc>
       <image:title>HPCH Tech - Web Development and AI Solutions</image:title>
       <image:caption>HPCH Tech is a premier freelancing agency specializing in custom website development, full-stack solutions, and AI-powered applications based in India serving clients worldwide.</image:caption>
       <image:geo_location>India</image:geo_location>
-      <image:license>https://hpchtech.com/</image:license>
+      <image:license>https://hpchtech.netlify.app/</image:license>
     </image:image>
   </url>
 </urlset>
