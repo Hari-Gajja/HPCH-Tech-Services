@@ -1272,7 +1272,7 @@ function App() {
             </span>
             <span className="mono">HPCH TECH</span>
           </div>
-          <p>Crafted with <i className="fas fa-heart"></i> in 2026</p>
+          <p>Developed by the HPCH Team <i className="fas fa-heart"></i> 2026</p>
           <a href="/privacy-policy" className="footer-privacy-link">Privacy Policy</a>
           <div className="footer-links">
             <a href="https://github.com/Hari-Gajja" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i className="fab fa-github"></i></a>
