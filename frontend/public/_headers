@@ -3,6 +3,7 @@
   Cross-Origin-Embedder-Policy: unsafe-none
   X-Robots-Tag: index, follow
   Cache-Control: public, max-age=0, must-revalidate
+  X-Frame-Options: SAMEORIGIN
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
