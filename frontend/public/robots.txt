@@ -8,12 +8,12 @@ Disallow: /hpch/tech/services/010/admin
 # Sitemap location
 Sitemap: https://hpch-services.netlify.app/sitemap.xml
 
-# Googlebot (no crawl-delay needed, Google ignores it)
+# Googlebot
 User-agent: Googlebot
 Allow: /
 Disallow: /hpch/tech/services/010/admin
 
+# Bingbot - no crawl-delay to allow fast indexation
 User-agent: Bingbot
-Crawl-delay: 1
 Allow: /
 Disallow: /hpch/tech/services/010/admin

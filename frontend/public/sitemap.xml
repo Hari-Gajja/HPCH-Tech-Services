@@ -17,4 +17,10 @@
       <image:license>https://hpch-services.netlify.app/</image:license>
     </image:image>
   </url>
+  <url>
+    <loc>https://hpch-services.netlify.app/privacy-policy</loc>
+    <lastmod>2026-03-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
 </urlset>
