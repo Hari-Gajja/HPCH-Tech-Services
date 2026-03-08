@@ -3226,34 +3226,48 @@ p {
 
 .service-dropdown {
   width: 100%;
-  padding: 0.75rem 2.5rem 0.75rem 1rem;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--card-bg, rgba(255, 255, 255, 0.03));
-  color: var(--text-primary);
-  font-size: 0.9rem;
-  font-family: inherit;
+  padding: 0.85rem 2.5rem 0.85rem 1.1rem;
+  background: linear-gradient(145deg, #ffffff 0%, #fafafa 100%);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  color: var(--black);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 500;
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  transition: border-color 0.25s, box-shadow 0.25s;
+  transition: all 0.4s var(--ease-premium);
   outline: none;
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,0.02),
+    0 1px 2px rgba(0,0,0,0.04);
 }
 
 .service-dropdown:hover {
-  border-color: var(--neon-pink);
+  border-color: rgba(0, 0, 0, 0.2);
 }
 
 .service-dropdown:focus {
   border-color: var(--neon-pink);
-  box-shadow: 0 0 0 2px rgba(255, 0, 128, 0.15);
+  background: #ffffff;
+  box-shadow:
+    0 0 0 4px rgba(255, 0, 128, 0.1),
+    0 0 20px rgba(255, 0, 128, 0.08),
+    inset 0 0 0 1px rgba(255, 0, 128, 0.1);
+  transform: translateY(-2px);
 }
 
 .service-dropdown option {
-  background: #1a1a2e;
-  color: var(--text-primary);
-  padding: 0.5rem;
+  background: #ffffff;
+  color: var(--black);
+  padding: 0.6rem;
+  font-size: 0.85rem;
+}
+
+.service-dropdown option:checked {
+  background: rgba(255, 0, 128, 0.08);
 }
 
 .service-select-icon {
@@ -3261,14 +3275,19 @@ p {
   right: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--text-secondary);
+  color: var(--gray-600);
   pointer-events: none;
-  font-size: 0.8rem;
-  transition: color 0.25s;
+  font-size: 0.75rem;
+  transition: all 0.4s var(--ease-premium);
 }
 
 .service-select-wrapper:hover .service-select-icon {
   color: var(--neon-pink);
+}
+
+.service-dropdown:focus + .service-select-icon {
+  color: var(--neon-pink);
+  transform: translateY(-50%) rotate(180deg);
 }
 
 /* SEO Optimization Radio */
