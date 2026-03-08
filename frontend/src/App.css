@@ -1774,6 +1774,23 @@ p {
   font-size: 1rem;
 }
 
+.maintenance-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 0, 128, 0.05);
+  border: 1px solid rgba(255, 0, 128, 0.2);
+  border-radius: 100px;
+}
+
+.maintenance-note i {
+  color: var(--neon-pink);
+  font-size: 1rem;
+}
+
 /* Responsive Services Grid */
 @media (max-width: 1024px) {
   .services-grid {

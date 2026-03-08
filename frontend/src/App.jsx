@@ -685,6 +685,7 @@ function App() {
 
             <div className="services-footer reveal delay-400">
               <p className="guarantee"><i className="fas fa-shield-halved"></i> 100% Satisfaction Guarantee — We don't stop until you're thrilled with the results</p>
+              <p className="maintenance-note"><i className="fas fa-calendar-check"></i> Monthly maintenance charges apply, starting at ₹1,000/month</p>
               <a href="#contact" className="btn primary btn-magnetic" onClick={(e) => scrollToSection(e, 'contact')}>
                 <span>Get Free Consultation</span>
                 <i className="fas fa-arrow-right"></i>
