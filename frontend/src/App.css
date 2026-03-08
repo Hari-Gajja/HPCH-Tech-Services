@@ -540,23 +540,6 @@ p {
   text-shadow: 0 0 20px rgba(255, 0, 128, 0.5), 0 0 40px rgba(255, 0, 128, 0.3);
 }
 
-/* Magnetic text effect base */
-.magnetic-text {
-  display: inline-block;
-  transition: transform 0.4s var(--ease-out-expo);
-}
-
-/* Split text animation helper */
-.split-char {
-  display: inline-block;
-  transition: transform 0.4s var(--ease-out-expo), opacity 0.4s ease;
-}
-
-.split-char:hover {
-  transform: translateY(-5px) scale(1.1);
-  color: var(--neon-pink);
-}
-
 /* ==============================================
    DISCOUNT BANNER
    ============================================== */
@@ -1120,76 +1103,6 @@ p {
   opacity: 0;
   animation: fadeInUp 0.8s var(--ease-out-expo) forwards;
   animation-delay: 1s;
-}
-
-/* Hero Stats */
-.hero-stats {
-  display: flex;
-  gap: 2.5rem;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-  position: relative;
-  opacity: 0;
-  animation: fadeInUp 0.8s var(--ease-out-expo) forwards;
-  animation-delay: 1.2s;
-}
-
-.hero-stats::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 60px;
-  height: 1px;
-  background: var(--gradient-hero);
-  animation: lineExpand 1s var(--ease-out-expo) forwards;
-  animation-delay: 1.4s;
-  transform-origin: left;
-  transform: scaleX(0);
-}
-
-@keyframes lineExpand {
-  to {
-    transform: scaleX(1);
-  }
-}
-
-.stat {
-  text-align: left;
-  position: relative;
-}
-
-.stat:hover .stat-number {
-  animation: countPulse 0.3s ease;
-}
-
-@keyframes countPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-}
-
-.stat-number {
-  display: block;
-  font-family: var(--font-display);
-  font-size: 2.25rem;
-  font-weight: 800;
-  line-height: 1;
-  background: var(--gradient-hero);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: drop-shadow(0 2px 4px rgba(255,0,128,0.2));
-  transition: transform 0.3s var(--ease-out-expo);
-}
-
-.stat-label {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--gray-400);
-  margin-top: 0.5rem;
 }
 
 /* Hero Visual */
@@ -1835,52 +1748,6 @@ p {
   50% { transform: scale(1.05); }
 }
 
-/* ---------- Discount Banner Strip ---------- */
-.discount-banner-strip {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100000;
-  background: linear-gradient(90deg, #ff0080, #7928ca, #00d4ff, #7928ca, #ff0080);
-  background-size: 300% 100%;
-  animation: bannerGradient 6s linear infinite;
-  padding: 0.45rem 1rem;
-  text-align: center;
-}
-
-@keyframes bannerGradient {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 300% 50%; }
-}
-
-.discount-banner-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.discount-banner-icon {
-  font-size: 0.85rem;
-}
-
-.discount-banner-text {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 0.03em;
-}
-
-/* Push header down when banner is visible */
-.discount-banner-strip ~ .site-header {
-  top: 32px;
-}
-
-.discount-banner-strip ~ .site-header.scrolled {
-  top: 32px;
-}
-
 .services-footer {
   margin-top: 3rem;
   text-align: center;
@@ -1929,347 +1796,6 @@ p {
   
   .service-card {
     padding: 1.5rem;
-  }
-}
-
-/* =============================================
-   BUDGET CALCULATOR SECTION
-   ============================================= */
-.budget-section {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-}
-
-.budget-section .section-header h2,
-.budget-section .section-header .display-md {
-  color: #1a1a2e;
-}
-
-.budget-section .section-desc {
-  color: #4a4a4a;
-}
-
-.budget-section .eyebrow {
-  color: #1a1a2e;
-  background: rgba(255, 0, 128, 0.1);
-  border-color: rgba(255, 0, 128, 0.3);
-}
-
-.budget-calculator-container {
-  display: grid;
-  grid-template-columns: 1fr 400px;
-  gap: 3rem;
-  margin-top: 3rem;
-  align-items: start;
-}
-
-.budget-options {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.budget-group {
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-}
-
-.budget-group h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: #1a1a2e;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.budget-group h3 i {
-  color: var(--neon-pink);
-  font-size: 1rem;
-}
-
-.budget-note {
-  font-size: 0.85rem;
-  color: #666;
-  margin-bottom: 1rem;
-}
-
-/* Radio Group */
-.budget-radio-group {
-  display: flex;
-  gap: 1rem;
-}
-
-.budget-radio-group.maintenance {
-  flex-wrap: wrap;
-}
-
-.budget-radio {
-  flex: 1;
-  min-width: 140px;
-  cursor: pointer;
-}
-
-.budget-radio input {
-  display: none;
-}
-
-.budget-radio .radio-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1.25rem 1rem;
-  background: rgba(255, 255, 255, 0.9);
-  border: 2px solid rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  text-align: center;
-}
-
-.budget-radio:hover .radio-content {
-  border-color: rgba(255, 0, 128, 0.4);
-  background: rgba(255, 0, 128, 0.05);
-}
-
-.budget-radio.selected .radio-content {
-  border-color: var(--neon-pink);
-  background: rgba(255, 0, 128, 0.1);
-  box-shadow: 0 0 20px rgba(255, 0, 128, 0.2);
-}
-
-.radio-title {
-  font-weight: 600;
-  color: #1a1a2e;
-  font-size: 0.95rem;
-}
-
-.radio-desc {
-  font-size: 0.75rem;
-  color: #666;
-}
-
-.radio-price {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #00a67e;
-}
-
-/* Checkbox Group */
-.budget-checkbox-group {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-}
-
-.budget-checkbox {
-  cursor: pointer;
-}
-
-.budget-checkbox input {
-  display: none;
-}
-
-.budget-checkbox .checkbox-content {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.9);
-  border: 2px solid rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  transition: all 0.3s ease;
-}
-
-.budget-checkbox:hover .checkbox-content {
-  border-color: rgba(255, 0, 128, 0.4);
-  background: rgba(255, 0, 128, 0.05);
-}
-
-.budget-checkbox.selected .checkbox-content {
-  border-color: var(--neon-pink);
-  background: rgba(255, 0, 128, 0.1);
-}
-
-.budget-checkbox .checkbox-content i {
-  font-size: 1.2rem;
-  color: var(--neon-pink);
-  width: 24px;
-  text-align: center;
-}
-
-.checkbox-title {
-  flex: 1;
-  font-weight: 500;
-  color: #1a1a2e;
-  font-size: 0.9rem;
-}
-
-.checkbox-price {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #00a67e;
-}
-
-/* Counter */
-.budget-counter {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.counter-btn {
-  width: 40px;
-  height: 40px;
-  border: 2px solid rgba(0, 0, 0, 0.2);
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 10px;
-  color: #1a1a2e;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.counter-btn:hover {
-  border-color: var(--neon-pink);
-  background: rgba(255, 0, 128, 0.1);
-}
-
-.counter-value {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1a1a2e;
-  min-width: 50px;
-  text-align: center;
-}
-
-.counter-price {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #00a67e;
-  margin-left: auto;
-}
-
-/* Total Display */
-.budget-total {
-  position: sticky;
-  top: 120px;
-}
-
-.budget-summary {
-  background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%);
-  border: 2px solid rgba(255, 0, 128, 0.3);
-  border-radius: 20px;
-  padding: 2rem;
-  text-align: center;
-}
-
-.budget-summary h3 {
-  font-size: 1rem;
-  color: #aaa;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
-
-.total-amount {
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  gap: 0.25rem;
-  margin-bottom: 1rem;
-}
-
-.total-amount .currency {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #fff;
-}
-
-.total-amount .amount {
-  font-size: 3rem;
-  font-weight: 800;
-  color: #fff;
-}
-
-.total-amount .suffix {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #fff;
-}
-
-.maintenance-note {
-  font-size: 0.9rem;
-  color: var(--neon-cyan);
-  margin-bottom: 1.5rem;
-}
-
-.budget-includes {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 12px;
-}
-
-.budget-includes p {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.85rem;
-  color: #ccc;
-}
-
-.budget-includes p i {
-  color: var(--neon-green);
-  font-size: 0.75rem;
-}
-
-.budget-summary .btn {
-  width: 100%;
-  justify-content: center;
-}
-
-/* Responsive Budget Calculator */
-@media (max-width: 1024px) {
-  .budget-calculator-container {
-    grid-template-columns: 1fr;
-  }
-  
-  .budget-total {
-    position: static;
-    order: -1;
-  }
-}
-
-@media (max-width: 768px) {
-  .budget-checkbox-group {
-    grid-template-columns: 1fr;
-  }
-  
-  .budget-radio-group {
-    flex-direction: column;
-  }
-  
-  .budget-radio {
-    min-width: auto;
-  }
-}
-
-@media (max-width: 480px) {
-  .budget-group {
-    padding: 1rem;
-  }
-  
-  .total-amount .amount {
-    font-size: 2.5rem;
   }
 }
 
@@ -3369,30 +2895,6 @@ p {
   box-shadow: none;
 }
 
-/* ---------- Client Type Select ---------- */
-.form-select {
-  width: 100%;
-  padding: 0.85rem 1rem;
-  font-size: 0.9rem;
-  font-family: inherit;
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  color: var(--black);
-  outline: none;
-  transition: border-color 0.3s, box-shadow 0.3s;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666' viewBox='0 0 16 16'%3E%3Cpath d='M8 10.5l-5-5h10l-5 5z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 1rem center;
-  cursor: pointer;
-}
-
-.form-select:focus {
-  border-color: var(--neon-pink);
-  box-shadow: 0 0 0 3px rgba(255, 0, 128, 0.08);
-}
-
 /* ==============================================
    STUDENT DISCOUNT SECTION
    ============================================== */
@@ -3716,93 +3218,57 @@ p {
 }
 
 /* ---------- Service Selection in Contact Form ---------- */
-.service-radio-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+/* Service Dropdown */
+.service-select-wrapper {
+  position: relative;
+  width: 100%;
 }
 
-.service-radio-option {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.65rem 0.85rem;
+.service-dropdown {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
   border: 1px solid var(--border);
   border-radius: 10px;
+  background: var(--card-bg, rgba(255, 255, 255, 0.03));
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-family: inherit;
   cursor: pointer;
-  transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
-  font-size: 0.85rem;
-  position: relative;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  transition: border-color 0.25s, box-shadow 0.25s;
+  outline: none;
 }
 
-.service-radio-option:hover {
+.service-dropdown:hover {
   border-color: var(--neon-pink);
-  background: rgba(255, 0, 128, 0.03);
 }
 
-.service-radio-option.selected {
+.service-dropdown:focus {
   border-color: var(--neon-pink);
-  background: rgba(255, 0, 128, 0.06);
-  box-shadow: 0 0 0 1px var(--neon-pink);
+  box-shadow: 0 0 0 2px rgba(255, 0, 128, 0.15);
 }
 
-.service-radio-option input[type="radio"] {
+.service-dropdown option {
+  background: #1a1a2e;
+  color: var(--text-primary);
+  padding: 0.5rem;
+}
+
+.service-select-icon {
   position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
   pointer-events: none;
-}
-
-.service-radio-option .radio-indicator {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 2px solid var(--border);
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: border-color 0.25s, background 0.25s;
-}
-
-.service-radio-option.selected .radio-indicator {
-  border-color: var(--neon-pink);
-  background: var(--neon-pink);
-}
-
-.service-radio-option.selected .radio-indicator::after {
-  content: '';
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #fff;
-}
-
-.service-radio-name {
-  flex: 1;
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.service-radio-price {
-  font-weight: 600;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  flex-shrink: 0;
-}
-
-.service-radio-original {
-  text-decoration: line-through;
-  opacity: 0.5;
   font-size: 0.8rem;
+  transition: color 0.25s;
 }
 
-.service-radio-discounted {
+.service-select-wrapper:hover .service-select-icon {
   color: var(--neon-pink);
-  font-weight: 700;
 }
 
 /* SEO Optimization Radio */
@@ -3912,14 +3378,9 @@ p {
 }
 
 @media (max-width: 480px) {
-  .service-radio-option {
-    font-size: 0.78rem;
-    padding: 0.55rem 0.65rem;
-  }
-  .service-radio-price {
-    flex-direction: column;
-    gap: 0;
-    font-size: 0.75rem;
+  .service-dropdown {
+    font-size: 0.82rem;
+    padding: 0.65rem 2.2rem 0.65rem 0.8rem;
   }
   .seo-radio-group {
     gap: 0.5rem;
@@ -4377,14 +3838,8 @@ p {
     cursor: auto;
   }
   
-  .cursor,
-  .cursor-follower {
-    display: none;
-  }
-  
   .hero-panel,
   .two-col,
-  .skills-container,
   .experience-grid,
   .contact-grid {
     grid-template-columns: 1fr;
@@ -4622,11 +4077,6 @@ p {
   
   .hero-actions .btn.icon {
     align-self: center;
-  }
-  
-  .skill-item {
-    grid-template-columns: 24px 70px 1fr;
-    gap: 0.5rem;
   }
   
   .contact-form,

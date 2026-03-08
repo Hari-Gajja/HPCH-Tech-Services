@@ -1184,34 +1184,24 @@ function App() {
                 </div>
                 <div className="field">
                   <label><i className="fas fa-cogs"></i> Select a Service</label>
-                  <div className="service-radio-group">
-                    {SERVICES.map((svc) => {
-                      const discounted = getDiscountedPrice(svc.price)
-                      const hasDiscount = discounted < svc.price
-                      return (
-                        <label key={svc.id} className={`service-radio-option ${selectedService === svc.id ? 'selected' : ''}`}>
-                          <input
-                            type="radio"
-                            name="service_selection"
-                            value={svc.id}
-                            checked={selectedService === svc.id}
-                            onChange={() => setSelectedService(svc.id)}
-                          />
-                          <span className="radio-indicator"></span>
-                          <span className="service-radio-name">{svc.name}</span>
-                          <span className="service-radio-price">
-                            {hasDiscount ? (
-                              <>
-                                <span className="service-radio-original">₹{svc.price.toLocaleString()}</span>
-                                <span className="service-radio-discounted">₹{discounted.toLocaleString()}</span>
-                              </>
-                            ) : (
-                              <>₹{svc.price.toLocaleString()}</>
-                            )}
-                          </span>
-                        </label>
-                      )
-                    })}
+                  <div className="service-select-wrapper">
+                    <select
+                      className="service-dropdown"
+                      value={selectedService}
+                      onChange={(e) => setSelectedService(e.target.value)}
+                    >
+                      <option value="">-- Choose a service --</option>
+                      {SERVICES.map((svc) => {
+                        const discounted = getDiscountedPrice(svc.price)
+                        const hasDiscount = discounted < svc.price
+                        return (
+                          <option key={svc.id} value={svc.id}>
+                            {svc.name} — {hasDiscount ? `₹${discounted.toLocaleString()} (was ₹${svc.price.toLocaleString()})` : `₹${svc.price.toLocaleString()}`}
+                          </option>
+                        )
+                      })}
+                    </select>
+                    <i className="fas fa-chevron-down service-select-icon"></i>
                   </div>
                   {selectedService && (() => {
                     const svc = SERVICES.find(s => s.id === selectedService)
