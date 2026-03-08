@@ -72,6 +72,27 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="format-detection" content="telephone=yes" />
     
+    <!-- Geo & Regional Targeting -->
+    <meta name="geo.region" content="IN-AP" />
+    <meta name="geo.placename" content="Vijayawada" />
+    <meta name="geo.position" content="16.5062;80.6480" />
+    <meta name="ICBM" content="16.5062, 80.6480" />
+    <meta name="DC.title" content="HPCH Services - Professional Web Development & AI Solutions" />
+    <meta name="DC.creator" content="HPCH Services" />
+    <meta name="DC.subject" content="Web Development, AI Solutions, Full Stack Development" />
+    <meta name="DC.description" content="HPCH Services offers professional web development, full-stack applications, and AI-powered solutions" />
+    <meta name="DC.publisher" content="HPCH Services" />
+    <meta name="DC.language" content="en" />
+    
+    <!-- Social Profile Links -->
+    <link rel="me" href="https://github.com/Hari-Gajja" />
+    <link rel="me" href="https://www.linkedin.com/in/gajja-hari-64a83237b/" />
+    
+    <!-- DNS Prefetch for performance -->
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+    <link rel="dns-prefetch" href="https://hpch-tech-services.onrender.com" />
+    
     <!-- Structured Data / JSON-LD for Google -->
     <script type="application/ld+json">
     {
@@ -123,7 +144,7 @@
     }
     </script>
     
-    <!-- Local Business Schema -->
+    <!-- Local Business Schema with Rating -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -133,9 +154,18 @@
       "priceRange": "$$",
       "telephone": "+91-7331105294",
       "email": "harigajja10@gmail.com",
+      "url": "https://hpch-services.netlify.app",
+      "description": "HPCH Services is a professional web development and AI solutions agency offering affordable custom websites, full-stack apps, and AI-powered solutions starting at ₹4,999.",
       "address": {
         "@type": "PostalAddress",
+        "addressLocality": "Vijayawada",
+        "addressRegion": "Andhra Pradesh",
         "addressCountry": "India"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 16.5062,
+        "longitude": 80.6480
       },
       "openingHoursSpecification": {
         "@type": "OpeningHoursSpecification",
@@ -143,7 +173,21 @@
         "opens": "09:00",
         "closes": "18:00"
       },
-      "areaServed": "Worldwide"
+      "areaServed": [
+        { "@type": "Country", "name": "India" },
+        { "@type": "GeoCircle", "geoMidpoint": { "@type": "GeoCoordinates", "latitude": 16.5062, "longitude": 80.6480 }, "geoRadius": "50000" }
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "HPCH Web Development Services",
+        "itemListElement": [
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Frontend Development" }, "price": "4999", "priceCurrency": "INR" },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Full Stack Web Development" }, "price": "8999", "priceCurrency": "INR" },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Full Stack + AI Chat + Custom Domain" }, "price": "12999", "priceCurrency": "INR" }
+        ]
+      },
+      "knowsAbout": ["Web Development", "React", "Node.js", "MongoDB", "Express.js", "MERN Stack", "AI Chatbot", "Full Stack Development", "Custom Website", "SEO"],
+      "slogan": "Transform your business with AI-powered web solutions"
     }
     </script>
 
@@ -350,7 +394,105 @@
             "@type": "Answer",
             "text": "You can contact the HPCH Team through the contact form on the HPCH Services website, by email at harigajja10@gmail.com, or by phone at +91-7331105294. HPCH web development consultations are available Monday through Saturday."
           }
+        },
+        {
+          "@type": "Question",
+          "name": "How much does HPCH charge for web development?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "HPCH web development prices start at ₹4,999 for frontend development. Full stack web development starts at ₹8,999. Full stack with AI chat and custom domain starts at ₹12,999. Monthly maintenance charges apply starting at ₹1,000/month. HPCH also offers student discounts on all packages."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where is HPCH located?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "HPCH Services is based in Vijayawada, Andhra Pradesh, India. While HPCH is based in India, we serve clients worldwide and provide remote web development and AI solutions to businesses globally."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What technologies does HPCH use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "HPCH uses modern technologies including React, Next.js, Vue.js for frontend; Node.js, Express.js for backend; MongoDB for databases; Python for AI/ML; and cloud platforms like Netlify and Render for hosting. HPCH specializes in the MERN stack (MongoDB, Express, React, Node.js)."
+          }
         }
+      ]
+    }
+    </script>
+
+    <!-- WebPage Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "HPCH Services - Professional Web Development & AI Solutions",
+      "description": "HPCH Services official website. Professional web development, full-stack applications, and AI solutions by the HPCH Team.",
+      "url": "https://hpch-services.netlify.app",
+      "inLanguage": "en",
+      "isPartOf": { "@type": "WebSite", "name": "HPCH Services", "url": "https://hpch-services.netlify.app" },
+      "about": { "@type": "Organization", "name": "HPCH Services" },
+      "mainEntity": { "@type": "Organization", "name": "HPCH Services", "url": "https://hpch-services.netlify.app" },
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": ["h1", ".hero-subtitle", ".section-desc"]
+      },
+      "specialty": "Web Development and AI Solutions"
+    }
+    </script>
+
+    <!-- Person Schema for Founder -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Hari Gajja",
+      "jobTitle": "Founder & Lead Developer",
+      "worksFor": { "@type": "Organization", "name": "HPCH Services", "url": "https://hpch-services.netlify.app" },
+      "url": "https://hpch-services.netlify.app",
+      "sameAs": [
+        "https://github.com/Hari-Gajja",
+        "https://www.linkedin.com/in/gajja-hari-64a83237b/"
+      ],
+      "knowsAbout": ["Web Development", "React", "Node.js", "MERN Stack", "AI Solutions", "Full Stack Development"]
+    }
+    </script>
+
+    <!-- HowTo Schema — targets process keywords -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Get a Website Built by HPCH Services",
+      "description": "Step-by-step guide to getting a professional website developed by the HPCH Team. From consultation to launch.",
+      "totalTime": "P7D",
+      "estimatedCost": { "@type": "MonetaryAmount", "currency": "INR", "value": "4999" },
+      "step": [
+        { "@type": "HowToStep", "position": 1, "name": "Contact HPCH", "text": "Visit hpch-services.netlify.app and fill out the contact form with your project requirements, or email harigajja10@gmail.com." },
+        { "@type": "HowToStep", "position": 2, "name": "Free Consultation", "text": "The HPCH Team will discuss your project scope, features, timeline, and provide a detailed quote." },
+        { "@type": "HowToStep", "position": 3, "name": "Design & Development", "text": "HPCH developers build your website using React, Node.js, and modern technologies with regular progress updates." },
+        { "@type": "HowToStep", "position": 4, "name": "Review & Launch", "text": "Review the finished website, request revisions, and we launch it with custom domain and hosting setup." }
+      ]
+    }
+    </script>
+
+    <!-- SiteNavigationElement Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SiteNavigationElement",
+      "name": "HPCH Services Main Navigation",
+      "hasPart": [
+        { "@type": "WebPage", "name": "Home", "url": "https://hpch-services.netlify.app/" },
+        { "@type": "WebPage", "name": "About HPCH", "url": "https://hpch-services.netlify.app/#about" },
+        { "@type": "WebPage", "name": "HPCH Services", "url": "https://hpch-services.netlify.app/#services" },
+        { "@type": "WebPage", "name": "HPCH Team", "url": "https://hpch-services.netlify.app/#team" },
+        { "@type": "WebPage", "name": "HPCH Projects", "url": "https://hpch-services.netlify.app/#projects" },
+        { "@type": "WebPage", "name": "HPCH Student Offer", "url": "https://hpch-services.netlify.app/#student-discount" },
+        { "@type": "WebPage", "name": "Contact HPCH", "url": "https://hpch-services.netlify.app/#contact" },
+        { "@type": "WebPage", "name": "Privacy Policy", "url": "https://hpch-services.netlify.app/privacy-policy" }
       ]
     }
     </script>
