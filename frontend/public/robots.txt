@@ -1,12 +1,12 @@
-# robots.txt for HPCH Tech
-# https://hpchtech.netlify.app
+# robots.txt for HPCH Services
+# https://hpch-services.netlify.app
 
 User-agent: *
 Allow: /
 Disallow: /hpch/tech/services/010/admin
 
 # Sitemap location
-Sitemap: https://hpchtech.netlify.app/sitemap.xml
+Sitemap: https://hpch-services.netlify.app/sitemap.xml
 
 # Googlebot (no crawl-delay needed, Google ignores it)
 User-agent: Googlebot
