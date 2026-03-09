@@ -107,6 +107,14 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const selectServiceAndScroll = (serviceId) => {
+    setSelectedService(serviceId)
+    const contactSection = document.getElementById('contact')
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
   const formRef = useRef(null)
   const [formStatus, setFormStatus] = useState({ loading: false, success: false, error: false, blocked: false, invalid: false })
   const [selectedService, setSelectedService] = useState('')
@@ -120,12 +128,12 @@ function App() {
   const [studentIdPreview, setStudentIdPreview] = useState('')
 
   const SERVICES = [
-    { id: 'frontend', name: 'Frontend Development', price: 2000 },
-    { id: 'frontend-domain', name: 'Frontend + Custom Domain', price: 2000 },
-    { id: 'fullstack', name: 'Full Stack Web Development', price: 2000 },
-    { id: 'fullstack-domain', name: 'Full Stack + Custom Domain', price: 2000 },
-    { id: 'fullstack-ai', name: 'Full Stack + AI Chat', price: 2000 },
-    { id: 'fullstack-ai-domain', name: 'Full Stack + AI Chat + Domain', price: 2000 },
+    { id: 'frontend', name: 'Static Website Development', price: 6999 },
+    { id: 'frontend-domain', name: 'Static Website + Custom Domain', price: 7999 },
+    { id: 'fullstack', name: 'Dynamic Web Application', price: 10999 },
+    { id: 'fullstack-domain', name: 'Dynamic Web App + Custom Domain', price: 11999 },
+    { id: 'fullstack-ai', name: 'AI-Powered Web Application', price: 13999 },
+    { id: 'fullstack-ai-domain', name: 'AI-Powered Web App + Custom Domain', price: 14999 },
   ]
 
   const getDiscountedPrice = (price) => {
@@ -536,148 +544,154 @@ function App() {
             </div>
 
             <div className="services-grid">
-              <div className="service-card reveal delay-100">
+              <div className="service-card reveal delay-100" onClick={() => selectServiceAndScroll('frontend')} style={{ cursor: 'pointer' }}>
                 <div className="service-icon">
                   <i className="fas fa-code"></i>
                 </div>
-                <h3>Frontend Development</h3>
-                <p>Beautiful, responsive frontend websites built with modern technologies. Clean code, fast performance, and stunning designs that bring your vision to life.</p>
+                <h3>Static Website Development</h3>
+                <p>Professional static websites with pixel-perfect design. Ideal for portfolios, landing pages, and business websites that load instantly and look stunning on every device.</p>
                 <ul className="service-features">
-                  <li><i className="fas fa-check"></i> React, Next.js, Vue.js</li>
-                  <li><i className="fas fa-check"></i> Mobile-first responsive</li>
-                  <li><i className="fas fa-check"></i> Modern UI/UX design</li>
+                  <li><i className="fas fa-check"></i> React / HTML5 / CSS3</li>
+                  <li><i className="fas fa-check"></i> Fully responsive design</li>
+                  <li><i className="fas fa-check"></i> SEO-optimized structure</li>
+                  <li><i className="fas fa-check"></i> Fast performance & hosting</li>
                 </ul>
                 <div className="service-cta">
-                  {getDiscountedPrice(4999) < 4999 ? (
+                  {getDiscountedPrice(6999) < 6999 ? (
                     <>
-                      <span className="service-price service-price--original">Starting at ₹4,999/-</span>
-                      <span className="service-price service-price--discount">Now ₹{getDiscountedPrice(4999).toLocaleString()}/-</span>
+                      <span className="service-price service-price--original">₹6,999/-</span>
+                      <span className="service-price service-price--discount">Now ₹{getDiscountedPrice(6999).toLocaleString()}/-</span>
                       <span className="service-discount-badge">{getTotalDiscount()}% OFF</span>
                     </>
                   ) : (
-                    <span className="service-price">Starting at ₹4,999/-</span>
+                    <span className="service-price">₹6,999/-</span>
                   )}
                 </div>
               </div>
 
-              <div className="service-card reveal delay-200">
+              <div className="service-card reveal delay-200" onClick={() => selectServiceAndScroll('frontend-domain')} style={{ cursor: 'pointer' }}>
                 <div className="service-icon">
                   <i className="fas fa-globe"></i>
                 </div>
-                <h3>Frontend Development + Custom Domain</h3>
-                <p>Get a complete frontend website with your own custom domain. We handle domain setup, DNS configuration, and SSL certificates for a professional online presence.</p>
+                <h3>Static Website + Custom Domain</h3>
+                <p>Everything in Static Website Development, plus your own branded domain name. We handle domain registration, DNS setup, and SSL certificates for a fully professional web presence.</p>
                 <ul className="service-features">
-                  <li><i className="fas fa-check"></i> Custom domain setup</li>
-                  <li><i className="fas fa-check"></i> SSL certificate included</li>
-                  <li><i className="fas fa-check"></i> Professional hosting</li>
+                  <li><i className="fas fa-check"></i> Everything in Static Website</li>
+                  <li><i className="fas fa-check"></i> Custom domain registration</li>
+                  <li><i className="fas fa-check"></i> SSL certificate & HTTPS</li>
+                  <li><i className="fas fa-check"></i> DNS configuration</li>
                 </ul>
                 <div className="service-cta">
-                  {getDiscountedPrice(5999) < 5999 ? (
+                  {getDiscountedPrice(7999) < 7999 ? (
                     <>
-                      <span className="service-price service-price--original">Starting at ₹5,999/-</span>
-                      <span className="service-price service-price--discount">Now ₹{getDiscountedPrice(5999).toLocaleString()}/-</span>
+                      <span className="service-price service-price--original">₹7,999/-</span>
+                      <span className="service-price service-price--discount">Now ₹{getDiscountedPrice(7999).toLocaleString()}/-</span>
                       <span className="service-discount-badge">{getTotalDiscount()}% OFF</span>
                     </>
                   ) : (
-                    <span className="service-price">Starting at ₹5,999/-</span>
+                    <span className="service-price">₹7,999/-</span>
                   )}
                 </div>
               </div>
 
-              <div className="service-card reveal delay-300">
+              <div className="service-card reveal delay-300" onClick={() => selectServiceAndScroll('fullstack')} style={{ cursor: 'pointer' }}>
                 <div className="service-icon">
                   <i className="fas fa-laptop-code"></i>
                 </div>
-                <h3>Full Stack Web Development</h3>
-                <p>Complete web applications with both frontend and backend. Databases, APIs, authentication, and everything you need for a fully functional web app.</p>
+                <h3>Dynamic Web Application</h3>
+                <p>Full-featured web applications with frontend, backend, and database. User authentication, REST APIs, admin dashboards, and everything needed for a production-ready app.</p>
                 <ul className="service-features">
-                  <li><i className="fas fa-check"></i> MERN / MEAN stack</li>
-                  <li><i className="fas fa-check"></i> Database integration</li>
-                  <li><i className="fas fa-check"></i> Secure authentication</li>
+                  <li><i className="fas fa-check"></i> MERN stack (React + Node.js)</li>
+                  <li><i className="fas fa-check"></i> Database & API integration</li>
+                  <li><i className="fas fa-check"></i> User authentication & roles</li>
+                  <li><i className="fas fa-check"></i> Admin panel included</li>
                 </ul>
                 <div className="service-cta">
-                  {getDiscountedPrice(8999) < 8999 ? (
+                  {getDiscountedPrice(10999) < 10999 ? (
                     <>
-                      <span className="service-price service-price--original">Starting at ₹8,999/-</span>
-                      <span className="service-price service-price--discount">Now ₹{getDiscountedPrice(8999).toLocaleString()}/-</span>
+                      <span className="service-price service-price--original">₹10,999/-</span>
+                      <span className="service-price service-price--discount">Now ₹{getDiscountedPrice(10999).toLocaleString()}/-</span>
                       <span className="service-discount-badge">{getTotalDiscount()}% OFF</span>
                     </>
                   ) : (
-                    <span className="service-price">Starting at ₹8,999/-</span>
+                    <span className="service-price">₹10,999/-</span>
                   )}
                 </div>
               </div>
 
-              <div className="service-card featured reveal delay-100">
+              <div className="service-card featured reveal delay-100" onClick={() => selectServiceAndScroll('fullstack-domain')} style={{ cursor: 'pointer' }}>
                 <div className="featured-badge">Popular</div>
                 <div className="service-icon">
                   <i className="fas fa-server"></i>
                 </div>
-                <h3>Full Stack Web Development + Custom Domain</h3>
-                <p>A complete full stack solution with your own custom domain. Professional hosting, SSL security, and a fully functional web application ready to scale.</p>
+                <h3>Dynamic Web App + Custom Domain</h3>
+                <p>A complete dynamic web application paired with your own custom domain. Professional cloud hosting, SSL security, and a scalable architecture built to grow with your business.</p>
                 <ul className="service-features">
-                  <li><i className="fas fa-check"></i> Full stack application</li>
+                  <li><i className="fas fa-check"></i> Everything in Dynamic Web App</li>
                   <li><i className="fas fa-check"></i> Custom domain & SSL</li>
-                  <li><i className="fas fa-check"></i> Cloud hosting setup</li>
-                </ul>
-                <div className="service-cta">
-                  {getDiscountedPrice(9999) < 9999 ? (
-                    <>
-                      <span className="service-price service-price--original">Starting at ₹9,999/-</span>
-                      <span className="service-price service-price--discount">Now ₹{getDiscountedPrice(9999).toLocaleString()}/-</span>
-                      <span className="service-discount-badge">{getTotalDiscount()}% OFF</span>
-                    </>
-                  ) : (
-                    <span className="service-price">Starting at ₹9,999/-</span>
-                  )}
-                </div>
-              </div>
-
-              <div className="service-card reveal delay-200">
-                <div className="service-icon">
-                  <i className="fas fa-robot"></i>
-                </div>
-                <h3>Full Stack Web Development + AI Chat</h3>
-                <p>Powerful full stack web app enhanced with AI chatbot integration. Smart conversational features that engage users and provide instant support.</p>
-                <ul className="service-features">
-                  <li><i className="fas fa-check"></i> AI chatbot integration</li>
-                  <li><i className="fas fa-check"></i> ChatGPT / Claude powered</li>
-                  <li><i className="fas fa-check"></i> Smart automation</li>
+                  <li><i className="fas fa-check"></i> Cloud hosting & deployment</li>
+                  <li><i className="fas fa-check"></i> Performance optimization</li>
                 </ul>
                 <div className="service-cta">
                   {getDiscountedPrice(11999) < 11999 ? (
                     <>
-                      <span className="service-price service-price--original">Starting at ₹11,999/-</span>
+                      <span className="service-price service-price--original">₹11,999/-</span>
                       <span className="service-price service-price--discount">Now ₹{getDiscountedPrice(11999).toLocaleString()}/-</span>
                       <span className="service-discount-badge">{getTotalDiscount()}% OFF</span>
                     </>
                   ) : (
-                    <span className="service-price">Starting at ₹11,999/-</span>
+                    <span className="service-price">₹11,999/-</span>
                   )}
                 </div>
               </div>
 
-              <div className="service-card featured reveal delay-300">
+              <div className="service-card reveal delay-200" onClick={() => selectServiceAndScroll('fullstack-ai')} style={{ cursor: 'pointer' }}>
+                <div className="service-icon">
+                  <i className="fas fa-robot"></i>
+                </div>
+                <h3>AI-Powered Web Application</h3>
+                <p>Next-generation web application with integrated AI capabilities. Smart chatbot, intelligent automation, and machine learning features that set your business apart from competitors.</p>
+                <ul className="service-features">
+                  <li><i className="fas fa-check"></i> Everything in Dynamic Web App</li>
+                  <li><i className="fas fa-check"></i> AI chatbot integration</li>
+                  <li><i className="fas fa-check"></i> GPT / Claude powered responses</li>
+                  <li><i className="fas fa-check"></i> Smart automation workflows</li>
+                </ul>
+                <div className="service-cta">
+                  {getDiscountedPrice(13999) < 13999 ? (
+                    <>
+                      <span className="service-price service-price--original">₹13,999/-</span>
+                      <span className="service-price service-price--discount">Now ₹{getDiscountedPrice(13999).toLocaleString()}/-</span>
+                      <span className="service-discount-badge">{getTotalDiscount()}% OFF</span>
+                    </>
+                  ) : (
+                    <span className="service-price">₹13,999/-</span>
+                  )}
+                </div>
+              </div>
+
+              <div className="service-card featured reveal delay-300" onClick={() => selectServiceAndScroll('fullstack-ai-domain')} style={{ cursor: 'pointer' }}>
                 <div className="featured-badge">Best Value</div>
                 <div className="service-icon">
                   <i className="fas fa-wand-magic-sparkles"></i>
                 </div>
-                <h3>Full Stack + AI Chat + Custom Domain</h3>
-                <p>The ultimate package! Complete full stack web application with AI-powered chatbot and your own custom domain. Everything you need for a modern, intelligent web presence.</p>
+                <h3>AI-Powered Web App + Custom Domain</h3>
+                <p>The ultimate all-in-one package. A production-ready dynamic web application with AI intelligence, custom branded domain, and premium cloud hosting — everything your business needs to succeed online.</p>
                 <ul className="service-features">
-                  <li><i className="fas fa-check"></i> Complete full stack app</li>
-                  <li><i className="fas fa-check"></i> AI chat integration</li>
-                  <li><i className="fas fa-check"></i> Custom domain & hosting</li>
+                  <li><i className="fas fa-check"></i> Complete AI-powered web app</li>
+                  <li><i className="fas fa-check"></i> Custom domain & SSL</li>
+                  <li><i className="fas fa-check"></i> Premium cloud hosting</li>
+                  <li><i className="fas fa-check"></i> Priority support & maintenance</li>
                 </ul>
                 <div className="service-cta">
-                  {getDiscountedPrice(12999) < 12999 ? (
+                  {getDiscountedPrice(14999) < 14999 ? (
                     <>
-                      <span className="service-price service-price--original">Starting at ₹12,999/-</span>
-                      <span className="service-price service-price--discount">Now ₹{getDiscountedPrice(12999).toLocaleString()}/-</span>
+                      <span className="service-price service-price--original">₹14,999/-</span>
+                      <span className="service-price service-price--discount">Now ₹{getDiscountedPrice(14999).toLocaleString()}/-</span>
                       <span className="service-discount-badge">{getTotalDiscount()}% OFF</span>
                     </>
                   ) : (
-                    <span className="service-price">Starting at ₹12,999/-</span>
+                    <span className="service-price">₹14,999/-</span>
                   )}
                 </div>
               </div>
