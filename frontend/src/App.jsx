@@ -120,12 +120,12 @@ function App() {
   const [studentIdPreview, setStudentIdPreview] = useState('')
 
   const SERVICES = [
-    { id: 'frontend', name: 'Frontend Development', price: 4999 },
-    { id: 'frontend-domain', name: 'Frontend + Custom Domain', price: 5999 },
-    { id: 'fullstack', name: 'Full Stack Web Development', price: 8999 },
-    { id: 'fullstack-domain', name: 'Full Stack + Custom Domain', price: 9999 },
-    { id: 'fullstack-ai', name: 'Full Stack + AI Chat', price: 11999 },
-    { id: 'fullstack-ai-domain', name: 'Full Stack + AI Chat + Domain', price: 12999 },
+    { id: 'frontend', name: 'Frontend Development', price: 2000 },
+    { id: 'frontend-domain', name: 'Frontend + Custom Domain', price: 2000 },
+    { id: 'fullstack', name: 'Full Stack Web Development', price: 2000 },
+    { id: 'fullstack-domain', name: 'Full Stack + Custom Domain', price: 2000 },
+    { id: 'fullstack-ai', name: 'Full Stack + AI Chat', price: 2000 },
+    { id: 'fullstack-ai-domain', name: 'Full Stack + AI Chat + Domain', price: 2000 },
   ]
 
   const getDiscountedPrice = (price) => {
